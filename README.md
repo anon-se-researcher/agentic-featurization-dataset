@@ -4,10 +4,11 @@
 
 ```
 dataset/
-  ReferenceManager/    C#/.NET 9 web API developed entirely through agentic coding
-  ReferenceManagerUI/  Single-page frontend for live demonstration
-  demonstration/       Transcripts of all 10 evolution steps
-  README.md            This file
+  ReferenceManager/       C#/.NET 9 web API developed entirely through agentic coding
+  ReferenceManagerUI/     Single-page frontend for live demonstration
+  demonstration/          Transcripts of all 10 evolution steps
+  annotation-audit.html   Manual audit of every feature-to-file mapping and fragment annotation
+  README.md               This file
 ```
 
 ## ReferenceManager
@@ -76,6 +77,10 @@ dotnet test
 
 `demonstration/prompts.md` lists all 27 developer prompts across the 10 evolution steps.  
 `demonstration/result-stats.md` reports final cloc statistics for the codebase.
+
+## Annotation audit
+
+`annotation-audit.html` is a manual audit of the final `ReferenceManager` state, checking every `.feature-to-file` mapping and every embedded fragment annotation against the feature model and the code it annotates. It distinguishes stale mappings (referencing a feature removed by a merge or split) from misplaced or over-broad fragment annotations (referencing a feature that still exists but does not match the annotated code). Open the file directly in a browser.
 
 ## Redaction note
 

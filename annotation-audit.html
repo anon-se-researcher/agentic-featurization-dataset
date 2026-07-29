@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Agent-HAnS Annotation Audit — ReferenceManager</title>
+<style>
+  :root {
+    --bg: #f6f7f9;
+    --panel: #ffffff;
+    --ink: #1c2128;
+    --muted: #5b6472;
+    --border: #dfe3e8;
+    --accent: #2f5d62;
+    --accent-soft: #e4eeee;
+
+    --ok-fg: #1f6f4a;   --ok-bg: #e9f6ee;   --ok-bd: #b7e0c8;
+    --warn-fg: #8a5a00;  --warn-bg: #fff4e0;  --warn-bd: #f2d18a;
+    --bad-fg:  #a3312a;  --bad-bg:  #fdecea;  --bad-bd:  #f0bcb6;
+  }
+  * { box-sizing: border-box; }
+  body { font-family: "Inter", -apple-system, Segoe UI, Roboto, sans-serif; margin: 0; background: var(--bg); color: var(--ink); line-height: 1.55; }
+  .wrap { max-width: 1150px; margin: 0 auto; padding: 2.2rem 2rem 4rem; }
+  h1 { font-size: 1.55rem; margin: 0 0 0.2rem; letter-spacing: -0.01em; }
+  h2 { font-size: 1.05rem; margin-top: 2.6rem; color: var(--accent); text-transform: uppercase; letter-spacing: 0.04em; border-bottom: 1px solid var(--border); padding-bottom: 0.4rem; }
+  h3 { font-size: 1rem; margin-top: 1.6rem; }
+  .subtitle { color: var(--muted); margin-top: 0; font-size: 0.95rem; }
+  .legend { display: flex; gap: 1.2rem; flex-wrap: wrap; margin: 1rem 0 0; font-size: 0.82rem; color: var(--muted); }
+  .legend span.dot { display: inline-block; width: 0.6rem; height: 0.6rem; border-radius: 50%; margin-right: 0.35rem; vertical-align: middle; }
+  .dot.ok { background: var(--ok-fg); }
+  .dot.warn { background: var(--warn-fg); }
+  .dot.bad { background: var(--bad-fg); }
+
+  .summary { display: flex; gap: 0.9rem; flex-wrap: wrap; margin: 1.5rem 0; }
+  .stat { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 0.9rem 1.2rem; flex: 1; min-width: 150px; box-shadow: 0 1px 2px rgba(20,20,30,0.04); }
+  .stat .num { font-size: 1.5rem; font-weight: 700; display: block; }
+  .stat .label { font-size: 0.78rem; color: var(--muted); }
+  .stat.ok .num { color: var(--ok-fg); }
+  .stat.warn .num { color: var(--warn-fg); }
+  .stat.bad .num { color: var(--bad-fg); }
+
+  table { border-collapse: collapse; width: 100%; margin: 1rem 0 2rem; font-size: 0.86rem; background: var(--panel); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+  th, td { padding: 0.5rem 0.7rem; text-align: left; vertical-align: top; border-bottom: 1px solid var(--border); }
+  th { background: var(--accent); color: white; font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.03em; }
+  tr:last-child td { border-bottom: none; }
+  tr.ok td:first-child { border-left: 3px solid var(--ok-fg); }
+  tr.warn td:first-child { border-left: 3px solid var(--warn-fg); }
+  tr.bad td:first-child { border-left: 3px solid var(--bad-fg); }
+  tr.ok { background: var(--ok-bg); }
+  tr.warn { background: var(--warn-bg); }
+  tr.bad { background: var(--bad-bg); }
+
+  .badge { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.15rem 0.55rem; border-radius: 20px; font-size: 0.74rem; font-weight: 700; white-space: nowrap; }
+  .badge.ok { background: var(--ok-bg); color: var(--ok-fg); border: 1px solid var(--ok-bd); }
+  .badge.warn { background: var(--warn-bg); color: var(--warn-fg); border: 1px solid var(--warn-bd); }
+  .badge.bad { background: var(--bad-bg); color: var(--bad-fg); border: 1px solid var(--bad-bd); }
+
+  code { background: var(--accent-soft); padding: 0.05rem 0.35rem; border-radius: 4px; font-size: 0.88em; color: #1a3b3e; }
+  pre.model { background: #1e2530; color: #d7dee6; padding: 1rem 1.2rem; border-radius: 10px; overflow-x: auto; font-size: 0.85rem; }
+  pre.code { background: #1e2530; color: #d7dee6; padding: 0.8rem 1rem; border-radius: 8px; overflow-x: auto; font-size: 0.8rem; margin: 0.4rem 0; }
+  pre.code .tag { color: #f2c14e; }
+  .note { font-size: 0.86rem; color: var(--muted); margin-top: -0.3rem; }
+  .toc { display: flex; gap: 1.3rem; flex-wrap: wrap; font-size: 0.85rem; margin-top: 0.8rem; }
+  .toc a { color: var(--accent); text-decoration: none; font-weight: 600; }
+  .toc a:hover { text-decoration: underline; }
+  .callout { background: var(--panel); border: 1px solid var(--warn-bd); border-left: 4px solid var(--warn-fg); border-radius: 8px; padding: 1rem 1.2rem; margin: 1rem 0; }
+  .callout.info { border-left-color: var(--accent); border-color: var(--border); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>Agent-HAnS Annotation Audit</h1>
+<p class="subtitle">Manual audit of <code>dataset/ReferenceManager</code> — final state after 27 prompts / 10 evolution steps. Verifies both <strong>resolution</strong> (does the referenced feature exist?) and <strong>placement</strong> (does the annotated code actually implement that feature?).</p>
+
+<div class="legend">
+  <span><span class="dot ok"></span>correct — feature exists and code matches</span>
+  <span><span class="dot warn"></span>misplaced — feature exists, but annotated code doesn't match it (or scope is too broad)</span>
+  <span><span class="dot bad"></span>stale — feature no longer exists in the model (dangling reference)</span>
+</div>
+
+<div class="toc">
+  <a href="#model">Feature model</a>
+  <a href="#summary">Summary</a>
+  <a href="#files">File mappings (20)</a>
+  <a href="#placement">Fragment placement findings</a>
+  <a href="#fragments">Full fragment list (50)</a>
+  <a href="#coverage">Feature coverage</a>
+  <a href="#missing">Missing annotations</a>
+</div>
+
+<h2 id="model">Final feature model (<code>.feature-model</code>)</h2>
+<pre class="model">ReferenceManager
+    Database
+    ApiDocs
+    Versioning
+    Papers
+        CreatePaper
+        GetPaper
+        UpdatePaper
+        DeletePaper
+        ImportBibtex
+        ExportBibtex
+        SearchPapers
+    Authors
+        CreateAuthor
+        GetAuthor
+        ListAuthors
+        UpdateAuthor
+        DeleteAuthor
+        MergeAuthors
+    Groups
+        CreateGroup
+        GetGroup
+        UpdateGroup
+        DeleteGroup
+        AddPaperToGroup
+        RemovePaperFromGroup</pre>
+<p class="note">25 non-root features, 6 top-level. <code>Tags</code> and <code>Collections</code> existed earlier and were merged into <code>Groups</code> at Evolution&nbsp;5; <code>Authors</code> was promoted from <code>Papers.Authors</code> to top-level at Evolution&nbsp;8 (split). Note that <code>Authors</code> has a dedicated <code>ListAuthors</code> feature, but <code>Papers</code> and <code>Groups</code> do not have a corresponding <code>ListPapers</code> / <code>ListGroups</code> — this asymmetry turns out to matter below.</p>
+
+<h2 id="summary">Summary</h2>
+<div class="summary">
+  <div class="stat"><span class="num">25</span><span class="label">features in final model</span></div>
+  <div class="stat ok"><span class="num">14 / 20</span><span class="label">file mappings correct</span></div>
+  <div class="stat bad"><span class="num">6 / 20</span><span class="label">file mappings stale</span></div>
+  <div class="stat ok"><span class="num">36 / 36</span><span class="label">begin/end blocks balanced</span></div>
+  <div class="stat warn"><span class="num">3 / 36</span><span class="label">blocks misplaced or over-broad</span></div>
+  <div class="stat ok"><span class="num">25 / 25</span><span class="label">features covered by fragments</span></div>
+</div>
+<p>Structural validity (balanced blocks, names resolving to real features) is not the same as placement correctness. All 36 begin/end blocks are balanced and every referenced name exists in the model, but reading the actual code inside each block surfaces <strong>3 of 36 blocks (8%)</strong> where the code does not match, or over-reaches, the feature it is tagged with. This is a stricter bar than the "structurally sound" framing in the current paper paragraph — recommend tightening that sentence.</p>
+
+<h2 id="files">File-level mappings (<code>.feature-to-file</code>) — 20 total</h2>
+<table>
+<thead><tr><th>Folder</th><th>File</th><th>Mapped feature</th><th>Verdict</th><th>Reason</th></tr></thead>
+<tbody>
+<tr class="ok"><td><code>Data</code></td><td><code>AppDbContext.cs</code></td><td><code>Database</code></td><td><span class="badge ok">correct</span></td><td>Feature exists, mapping matches file content.</td></tr>
+<tr class="ok"><td><code>Data</code></td><td><code>DbSeeder.cs</code></td><td><code>Database</code></td><td><span class="badge ok">correct</span></td><td>Feature exists, mapping matches file content.</td></tr>
+<tr class="ok"><td><code>Endpoints</code></td><td><code>PaperEndpoints.cs</code></td><td><code>Papers</code></td><td><span class="badge ok">correct</span></td><td>Feature exists, mapping matches file content.</td></tr>
+<tr class="ok"><td><code>Endpoints</code></td><td><code>GroupEndpoints.cs</code></td><td><code>Groups</code></td><td><span class="badge ok">correct</span></td><td>Feature exists, mapping matches file content.</td></tr>
+<tr class="bad"><td><code>Migrations</code></td><td><code>20260424105228_AddCollections.cs</code></td><td><code>Collections</code></td><td><span class="badge bad">stale</span></td><td><code>Collections</code> no longer exists — merged into <code>Groups</code> at Evolution&nbsp;5. Dangling reference.</td></tr>
+<tr class="bad"><td><code>Migrations</code></td><td><code>20260424105228_AddCollections.Designer.cs</code></td><td><code>Collections</code></td><td><span class="badge bad">stale</span></td><td>Same as above.</td></tr>
+<tr class="bad"><td><code>Migrations</code></td><td><code>20260427060630_AddTags.cs</code></td><td><code>Tags</code></td><td><span class="badge bad">stale</span></td><td><code>Tags</code> no longer exists — merged into <code>Groups</code> at Evolution&nbsp;5. Dangling reference.</td></tr>
+<tr class="bad"><td><code>Migrations</code></td><td><code>20260427060630_AddTags.Designer.cs</code></td><td><code>Tags</code></td><td><span class="badge bad">stale</span></td><td>Same as above.</td></tr>
+<tr class="ok"><td><code>Migrations</code></td><td><code>20260427075843_MergeTagsAndCollectionsIntoGroups.cs</code></td><td><code>Groups</code></td><td><span class="badge ok">correct</span></td><td>Feature exists, this is the merge migration itself.</td></tr>
+<tr class="ok"><td><code>Migrations</code></td><td><code>20260427075843_MergeTagsAndCollectionsIntoGroups.Designer.cs</code></td><td><code>Groups</code></td><td><span class="badge ok">correct</span></td><td>Same as above.</td></tr>
+<tr class="ok"><td><code>Models</code></td><td><code>Paper.cs</code></td><td><code>Papers</code></td><td><span class="badge ok">correct</span></td><td>Feature exists, mapping matches file content.</td></tr>
+<tr class="bad"><td><code>Models</code></td><td><code>Author.cs</code></td><td><code>Papers</code></td><td><span class="badge bad">stale</span></td><td><code>Authors</code> was promoted to top-level at Evolution&nbsp;8; mapping was never updated. The <em>fragment</em> annotation in this same file correctly says <code>&amp;begin[Authors]</code> — the two annotation layers disagree inside one file.</td></tr>
+<tr class="bad"><td><code>Models</code></td><td><code>Affiliation.cs</code></td><td><code>Papers</code></td><td><span class="badge bad">stale</span></td><td>Same split-related staleness as <code>Author.cs</code>.</td></tr>
+<tr class="ok"><td><code>Models</code></td><td><code>Group.cs</code></td><td><code>Groups</code></td><td><span class="badge ok">correct</span></td><td>Feature exists, mapping matches file content.</td></tr>
+<tr class="ok"><td><code>Requests</code></td><td><code>PaperRequests.cs</code></td><td><code>Papers</code></td><td><span class="badge ok">correct</span></td><td>Feature exists, mapping matches file content.</td></tr>
+<tr class="ok"><td><code>Requests</code></td><td><code>GroupRequests.cs</code></td><td><code>Groups</code></td><td><span class="badge ok">correct</span></td><td>Feature exists, mapping matches file content.</td></tr>
+<tr class="ok"><td><code>Responses</code></td><td><code>ImportResult.cs</code></td><td><code>ImportBibtex</code></td><td><span class="badge ok">correct</span></td><td>Sub-feature of <code>Papers</code>, exists, mapping matches.</td></tr>
+<tr class="ok"><td><code>Responses</code></td><td><code>SearchResponse.cs</code></td><td><code>SearchPapers</code></td><td><span class="badge ok">correct</span></td><td>Sub-feature of <code>Papers</code>, exists, mapping matches.</td></tr>
+<tr class="ok"><td><code>Services</code></td><td><code>BibtexParser.cs</code></td><td><code>ImportBibtex</code></td><td><span class="badge ok">correct</span></td><td>Sub-feature of <code>Papers</code>, exists, mapping matches.</td></tr>
+<tr class="ok"><td><code>Services</code></td><td><code>BibtexSerializer.cs</code></td><td><code>ExportBibtex</code></td><td><span class="badge ok">correct</span></td><td>Sub-feature of <code>Papers</code>, exists, mapping matches.</td></tr>
+</tbody>
+</table>
+
+<h2 id="placement">Fragment placement findings — read against actual code</h2>
+<p>Checking that the feature name in each <code>&amp;begin[F]</code>/<code>&amp;line[F]</code> resolves to a real feature is necessary but not sufficient. The following three blocks resolve to real features yet are misplaced or over-broad when read against the code they wrap.</p>
+
+<div class="callout">
+<h3>1. <code>Data/DbSeeder.cs:118–159</code> tagged <code>Groups</code>, but the code creates <code>Paper</code> objects</h3>
+<pre class="code">// <span class="tag">&amp;begin[Groups]</span>
+new Paper
+{
+    Title = "On Using LLMs to 'Featurize' Software",
+    ...
+},
+new Paper { Title = "An IDE Plugin for Clone Management...", ... },
+new Paper { Title = "Visualizing Feature-Oriented Software Evolution", ... },
+... (4 more Paper object literals)
+// <span class="tag">&amp;end[Groups]</span></pre>
+<p>No <code>Group</code> entity is constructed anywhere in this block — it is pure <code>Paper</code> seed data. It happens to seed the exact papers that a later, separate block (lines 165–192, correctly tagged <code>Groups</code>) assembles into a demo <code>Group</code>. The annotation likely followed "this data exists in service of the Groups demo" rather than "this code implements the Groups feature." By the paper's own definition, feature annotation should track where a feature's implementation asset lives, not where its test data originates — this block should be untagged or tagged <code>Papers</code>.</p>
+</div>
+
+<div class="callout">
+<h3>2. <code>Endpoints/GroupEndpoints.cs:13–30</code> tagged <code>GetGroup</code>, but contains two distinct endpoints</h3>
+<pre class="code">// <span class="tag">&amp;begin[GetGroup]</span>
+app.MapGet("/groups", ...)          // list all groups — named "ListGroups"
+    .WithName("ListGroups")...
+
+app.MapGet("/groups/{id:int}", ...) // get one group — named "GetGroup"
+    .WithName("GetGroup")...
+// <span class="tag">&amp;end[GetGroup]</span></pre>
+<p>The block covers both the collection-list endpoint and the single-item endpoint, but only <code>GetGroup</code> exists in the model — there is no <code>ListGroups</code>. The list endpoint's code is absorbed into a tag that names something narrower than what it covers.</p>
+</div>
+
+<div class="callout">
+<h3>3. <code>Endpoints/PaperEndpoints.cs:14–31</code> tagged <code>GetPaper</code>, same pattern</h3>
+<pre class="code">// <span class="tag">&amp;begin[GetPaper]</span>
+app.MapGet("/papers", ...)          // list all papers — named "ListPapers"
+    .WithName("ListPapers")...
+
+app.MapGet("/papers/{id:int}", ...) // get one paper — named "GetPaper"
+    .WithName("GetPaper")...
+// <span class="tag">&amp;end[GetPaper]</span></pre>
+<p>Identical issue to finding 2. Together these two findings show a systematic gap: 2 of 3 CRUD feature families (<code>Papers</code>, <code>Groups</code>) never got a <code>ListX</code> sibling feature the way <code>Authors</code> did, so the agent folded list-endpoint code into the closest existing tag instead of extending the feature model to match. This is a modeling-granularity miss carried consistently across two evolution steps (Evolution&nbsp;1 for Papers, Evolution&nbsp;2 for Collections/original Groups precursor), not a one-off slip.</p>
+</div>
+
+<div class="callout info">
+<h3>Everything else checked out</h3>
+<p>The remaining 33 of 36 blocks were read in full and match their tags: all <code>Authors</code>/<code>CreateAuthor</code>/<code>GetAuthor</code>/<code>UpdateAuthor</code>/<code>DeleteAuthor</code>/<code>ListAuthors</code>/<code>MergeAuthors</code> blocks in <code>AuthorEndpoints.cs</code> correctly scope to their named operation (this family does distinguish List from Get). The nested <code>MergeAuthors</code> block inside the outer <code>Authors</code> block in the test file is correctly nested. All <code>Program.cs</code>, <code>Requests/</code>, <code>Responses/</code>, and <code>Models/</code> (except <code>Author.cs</code>'s file-mapping conflict, already listed above) blocks match their code exactly. All 14 <code>&amp;line[F]</code> annotations sit on the correct line and name the correct feature.</p>
+</div>
+
+<h2 id="fragments">Full fragment list — 36 begin/end blocks + 14 line annotations</h2>
+<table>
+<thead><tr><th>File</th><th>Line</th><th>Kind</th><th>Feature</th><th>Resolution</th><th>Placement</th></tr></thead>
+<tbody>
+<tr class="ok"><td><code>Data/AppDbContext.cs</code></td><td>9</td><td>line</td><td><code>Groups</code></td><td><span class="badge ok">exists</span></td><td><span class="badge ok">correct</span></td></tr>
+<tr class="ok"><td><code>Data/AppDbContext.cs</code></td><td>10</td><td>line</td><td><code>Authors</code></td><td><span class="badge ok">exists</span></td><td><span class="badge ok">correct</span></td></tr>
+<tr class="ok"><td><code>Data/AppDbContext.cs</code></td><td>14 / 22</td><td>begin/end</td><td><code>Authors</code></td><td><span class="badge ok">exists</span></td><td><span class="badge ok">correct</span></td></tr>
+<tr class="ok"><td><code>Data/AppDbContext.cs</code></td><td>24 / 29</td><td>begin/end</td><td><code>Groups</code></td><td><span class="badge ok">exists</span></td><td><span class="badge ok">correct</span></td></tr>
+<tr class="ok"><td><code>Data/DbSeeder.cs</code></td><td>12 / 51</td><td>begin/end</td><td><code>Authors</code></td><td><span class="badge ok">exists</span></td><td><span class="badge ok">correct</span></td></tr>
+<tr class="warn"><td><code>Data/DbSeeder.cs</code></td><td>118 / 159</td><td>begin/end</td><td><code>Groups</code></td><td><span class="badge ok">exists</span></td><td><span class="badge warn">misplaced — creates Papers, not a Group</span></td></tr>
+<tr class="ok"><td><code>Data/DbSeeder.cs</code></td><td>165 / 192</td><td>begin/end</td><td><code>Groups</code></td><td><span class="badge ok">exists</span></td><td><span class="badge ok">correct</span></td></tr>
+<tr class="ok"><td><code>Endpoints/AuthorEndpoints.cs</code></td><td>12 / 17</td><td>begin/end</td><td><code>ListAuthors</code></td><td><span class="badge ok">exists</span></td><td><span class="badge ok">correct</span></td></tr>
+<tr class="ok"><td><code>Endpoints/AuthorEndpoints.cs</code></td><td>19 / 26</td><td>begin/end</td><td><code>GetAuthor</code></td><td><span class="badge ok">exists</span></td><td><span class="badge ok">correct</span></td></tr>
+<tr class="ok"><td><code>Endpoints/AuthorEndpoints.cs</code></td><td>28 / 43</td><td>begin/end</td><td><code>CreateAuthor</code></td><td><span class="badge ok">exists</span></td><td><span class="badge ok">correct</span></td></tr>
+<tr class="ok"><td><code>Endpoints/AuthorEndpoints.cs</code></td><td>45 / 61</td><td>begin/end</td><td><code>UpdateAuthor</code></td><td><span class="badge ok">exists</span></td><td><span class="badge ok">correct</span></td></tr>
+<tr class="ok"><td><code>Endpoints/AuthorEndpoints.cs</code></td><td>63 / 75</td><td>begin/end</td><td><code>DeleteAuthor</code></td><td><span class="badge ok">exists</span></td><td><span class="badge ok">correct</span></td></tr>
+<tr class="ok"><td><code>Endpoints/AuthorEndpoints.cs</code></td><td>77 / 104</td><td>begin/end</td><td><code>MergeAuthors</code></td><td><span class="badge ok">exists</span></td><td><span class="badge ok">correct</span></td></tr>
+<tr class="ok"><td><code>Endpoints/AuthorEndpoints.cs</code></td><td>107 / 144</td><td>begin/end</td><td><code>Authors</code></td><td><span class="badge ok">exists</span></td><td><span class="badge ok">correct</span></td></tr>
+<tr class="warn"><td><code>Endpoints/GroupEndpoints.cs</code></td><td>13 / 30</td><td>begin/end</td><td><code>GetGroup</code></td><td><span class="badge ok">exists</span></td><td><span class="badge warn">over-broad — also covers ListGroups (no such feature)</span></td></tr>
+<tr class="ok"><td><code>Endpoints/GroupEndpoints.cs</code></td><td>32 / 42</td><td>begin/end</td><td><code>CreateGroup</code></td><td><span class="badge ok">exists</span></td><td><span class="badge ok">correct</span></td></tr>
+<tr class="ok"><td><code>Endpoints/GroupEndpoints.cs</code></td><td>44 / 57</td><td>begin/end</td><td><code>UpdateGroup</code></td><td><span class="badge ok">exists</span></td><td><span class="badge ok">correct</span></td></tr>
+<tr class="ok"><td><code>Endpoints/GroupEndpoints.cs</code></td><td>59 / 71</td><td>begin/end</td><td><code>DeleteGroup</code></td><td><span class="badge ok">exists</span></td><td><span class="badge ok">correct</span></td></tr>
+<tr class="ok"><td><code>Endpoints/GroupEndpoints.cs</code></td><td>73 / 90</td><td>begin/end</td><td><code>AddPaperToGroup</code></td><td><span class="badge ok">exists</span></td><td><span class="badge ok">correct</span></td></tr>
+<tr class="ok"><td><code>Endpoints/GroupEndpoints.cs</code></td><td>92 / 107</td><td>begin/end</td><td><code>RemovePaperFromGroup</code></td><td><span class="badge ok">exists</span></td><td><span class="badge ok">correct</span></td></tr>
+<tr class="warn"><td><code>Endpoints/PaperEndpoints.cs</code></td><td>14 / 31</td><td>begin/end</td><td><code>GetPaper</code></td><td><span class="badge ok">exists</span></td><td><span class="badge warn">over-broad — also covers ListPapers (no such feature)</span></td></tr>
+<tr class="ok"><td><code>Endpoints/PaperEndpoints.cs</code></td><td>33 / 57</td><td>begin/end</td><td><code>CreatePaper</code></td><td><span class="badge ok">exists</span></td><td><span class="badge ok">correct</span></td></tr>
+<tr class="ok"><td><code>Endpoints/PaperEndpoints.cs</code></td><td>59 / 82</td><td>begin/end</td><td><code>UpdatePaper</code></td><td><span class="badge ok">exists</span></td><td><span class="badge ok">correct</span></td></tr>
+<tr class="ok"><td><code>Endpoints/PaperEndpoints.cs</code></td><td>84 / 96</td><td>begin/end</td><td><code>DeletePaper</code></td><td><span class="badge ok">exists</span></td><td><span class="badge ok">correct</span></td></tr>
+<tr class="ok"><td><code>Endpoints/PaperEndpoints.cs</code></td><td>98 / 179</td><td>begin/end</td><td><code>ImportBibtex</code></td><td><span class="badge ok">exists</span></td><td><span class="badge ok">correct</span></td></tr>
+<tr class="ok"><td><code>Endpoints/PaperEndpoints.cs</code></td><td>181 / 238</td><td>begin/end</td><td><code>SearchPapers</code></td><td><span class="badge ok">exists</span></td><td><span class="badge ok">correct</span></td></tr>
+<tr class="ok"><td><code>Endpoints/PaperEndpoints.cs</code></td><td>240 / 256</td><td>begin/end</td><td><code>ExportBibtex</code></td><td><span class="badge ok">exists</span></td><td><span class="badge ok">correct</span></td></tr>
+<tr class="ok"><td><code>Models/Author.cs</code></td><td>3 / 12</td><td>begin/end</td><td><code>Authors</code></td><td><span class="badge ok">exists</span></td><td><span class="badge ok">correct</span> <span class="note">(contradicts stale file mapping, see above)</span></td></tr>
+<tr class="ok"><td><code>Models/Paper.cs</code></td><td>7</td><td>line</td><td><code>Authors</code></td><td><span class="badge ok">exists</span></td><td><span class="badge ok">correct</span></td></tr>
+<tr class="ok"><td><code>Models/Paper.cs</code></td><td>11</td><td>line</td><td><code>ImportBibtex</code></td><td><span class="badge ok">exists</span></td><td><span class="badge ok">correct</span></td></tr>
+<tr class="ok"><td><code>Models/Paper.cs</code></td><td>12</td><td>line</td><td><code>ImportBibtex</code></td><td><span class="badge ok">exists</span></td><td><span class="badge ok">correct</span></td></tr>
+<tr class="ok"><td><code>Models/Paper.cs</code></td><td>13</td><td>line</td><td><code>Groups</code></td><td><span class="badge ok">exists</span></td><td><span class="badge ok">correct</span></td></tr>
+<tr class="ok"><td><code>Program.cs</code></td><td>10 / 14</td><td>begin/end</td><td><code>ApiDocs</code></td><td><span class="badge ok">exists</span></td><td><span class="badge ok">correct</span></td></tr>
+<tr class="ok"><td><code>Program.cs</code></td><td>18 / 21</td><td>begin/end</td><td><code>Database</code></td><td><span class="badge ok">exists</span></td><td><span class="badge ok">correct</span></td></tr>
+<tr class="ok"><td><code>Program.cs</code></td><td>25</td><td>line</td><td><code>ApiDocs</code></td><td><span class="badge ok">exists</span></td><td><span class="badge ok">correct</span></td></tr>
+<tr class="ok"><td><code>Program.cs</code></td><td>27 / 33</td><td>begin/end</td><td><code>ApiDocs</code></td><td><span class="badge ok">exists</span></td><td><span class="badge ok">correct</span></td></tr>
+<tr class="ok"><td><code>Program.cs</code></td><td>37 / 44</td><td>begin/end</td><td><code>Database</code></td><td><span class="badge ok">exists</span></td><td><span class="badge ok">correct</span></td></tr>
+<tr class="ok"><td><code>Program.cs</code></td><td>46</td><td>line</td><td><code>Versioning</code></td><td><span class="badge ok">exists</span></td><td><span class="badge ok">correct</span></td></tr>
+<tr class="ok"><td><code>Program.cs</code></td><td>48</td><td>line</td><td><code>Authors</code></td><td><span class="badge ok">exists</span></td><td><span class="badge ok">correct</span></td></tr>
+<tr class="ok"><td><code>Program.cs</code></td><td>49</td><td>line</td><td><code>Groups</code></td><td><span class="badge ok">exists</span></td><td><span class="badge ok">correct</span></td></tr>
+<tr class="ok"><td><code>ReferenceManager.Tests/AuthorEndpointTests.cs</code></td><td>9 / 229</td><td>begin/end</td><td><code>Authors</code></td><td><span class="badge ok">exists</span></td><td><span class="badge ok">correct</span></td></tr>
+<tr class="ok"><td><code>ReferenceManager.Tests/AuthorEndpointTests.cs</code></td><td>115 / 227</td><td>begin/end</td><td><code>MergeAuthors</code></td><td><span class="badge ok">exists</span></td><td><span class="badge ok">correct</span> <span class="note">(correctly nested inside outer Authors block)</span></td></tr>
+<tr class="ok"><td><code>Requests/AuthorRequests.cs</code></td><td>3 / 6</td><td>begin/end</td><td><code>Authors</code></td><td><span class="badge ok">exists</span></td><td><span class="badge ok">correct</span></td></tr>
+<tr class="ok"><td><code>Requests/PaperRequests.cs</code></td><td>3 / 5</td><td>begin/end</td><td><code>Papers</code></td><td><span class="badge ok">exists</span></td><td><span class="badge ok">correct</span></td></tr>
+<tr class="ok"><td><code>Responses/PaperResponse.cs</code></td><td>5 / 7</td><td>begin/end</td><td><code>Authors</code></td><td><span class="badge ok">exists</span></td><td><span class="badge ok">correct</span></td></tr>
+<tr class="ok"><td><code>Responses/PaperResponse.cs</code></td><td>9 / 11</td><td>begin/end</td><td><code>Groups</code></td><td><span class="badge ok">exists</span></td><td><span class="badge ok">correct</span></td></tr>
+<tr class="ok"><td><code>Responses/PaperResponse.cs</code></td><td>16</td><td>line</td><td><code>Authors</code></td><td><span class="badge ok">exists</span></td><td><span class="badge ok">correct</span></td></tr>
+<tr class="ok"><td><code>Responses/PaperResponse.cs</code></td><td>20</td><td>line</td><td><code>ImportBibtex</code></td><td><span class="badge ok">exists</span></td><td><span class="badge ok">correct</span></td></tr>
+<tr class="ok"><td><code>Responses/PaperResponse.cs</code></td><td>21</td><td>line</td><td><code>ImportBibtex</code></td><td><span class="badge ok">exists</span></td><td><span class="badge ok">correct</span></td></tr>
+<tr class="ok"><td><code>Responses/PaperResponse.cs</code></td><td>22</td><td>line</td><td><code>Groups</code></td><td><span class="badge ok">exists</span></td><td><span class="badge ok">correct</span></td></tr>
+</tbody>
+</table>
+
+<h2 id="coverage">Feature coverage by fragment annotations</h2>
+<p>All 25 features in the model are referenced by at least one fragment annotation: <code>Database</code>, <code>ApiDocs</code>, <code>Versioning</code>, <code>Papers</code>, <code>CreatePaper</code>, <code>GetPaper</code>, <code>UpdatePaper</code>, <code>DeletePaper</code>, <code>ImportBibtex</code>, <code>ExportBibtex</code>, <code>SearchPapers</code>, <code>Authors</code>, <code>CreateAuthor</code>, <code>GetAuthor</code>, <code>ListAuthors</code>, <code>UpdateAuthor</code>, <code>DeleteAuthor</code>, <code>MergeAuthors</code>, <code>Groups</code>, <code>CreateGroup</code>, <code>GetGroup</code>, <code>UpdateGroup</code>, <code>DeleteGroup</code>, <code>AddPaperToGroup</code>, <code>RemovePaperFromGroup</code>. 25/25 — full coverage, independent of the placement findings above (coverage counts a feature as "referenced" even where the reference is over-broad, e.g. <code>GetGroup</code> / <code>GetPaper</code>).</p>
+<p class="note">Coverage-by-feature is not the same question as coverage-by-file. A feature can be "covered" by one annotated file while a second file that also implements it carries nothing. The section below checks the latter.</p>
+
+<h2 id="missing">Missing annotations — files that implement a feature but carry none</h2>
+<p>Everything above audits annotations that exist. This section checks the opposite direction: does every file that implements a feature carry <em>some</em> annotation, fragment or file-level? Of the 41 <code>.cs</code> files in <code>ReferenceManager</code>, 23 carry at least one annotation and 18 carry none. Most of the 18 are legitimately infrastructural (EF-generated <code>*.Designer.cs</code> siblings of already-tagged migrations, the auto-generated <code>AppDbContextModelSnapshot.cs</code>, the test-harness <code>CustomWebApplicationFactory.cs</code>, the three endpoint test suites, discussed separately below, and the generic cross-feature <code>Responses/PagedResult.cs</code>) and are reasonable to leave untagged. Two are not.</p>
+<p class="note">Test files are excluded from this check by design. Embedded feature annotations track where a feature is <em>implemented</em>, and tests verify a feature rather than implement it, so an unannotated test suite is not a recall failure. The interesting fact about the test suites turns out to run the other way, see below.</p>
+
+<div class="summary">
+  <div class="stat"><span class="num">23 / 41</span><span class="label">files carry some annotation</span></div>
+  <div class="stat bad"><span class="num">2</span><span class="label">feature-implementing migrations, zero annotation</span></div>
+</div>
+
+<div class="callout">
+<h3>4. <code>Migrations/20260427094357_StandaloneAuthors.cs</code> (+ <code>.Designer.cs</code>) — the Evolution&nbsp;8 split migration itself, completely untagged</h3>
+<pre class="code">public partial class StandaloneAuthors : Migration
+{
+    protected override void Up(MigrationBuilder migrationBuilder)
+    {
+        migrationBuilder.CreateTable(name: "Authors", ...);
+        migrationBuilder.CreateTable(name: "PaperAuthor", ...);
+        // ... migrates existing JSON-embedded authors into standalone rows ...
+        migrationBuilder.DropColumn(name: "Authors", table: "Papers");
+    }
+}
+<span class="tag">// no &amp;begin[Authors] anywhere in this file</span></pre>
+<p>This is the migration that performs the Evolution&nbsp;8 split promoting <code>Authors</code> to a top-level feature, the same structural change that left <code>Models/Author.cs</code> and <code>Models/Affiliation.cs</code> mapped to the wrong feature (finding above). It is the third distinct annotation failure traceable to that single evolution step, and arguably the most direct one, since this file <em>is</em> the split.</p>
+</div>
+
+<div class="callout">
+<h3>5. <code>Migrations/20260427081828_AddJournalAndBooktitleToPaper.cs</code> (+ <code>.Designer.cs</code>) — adds the exact columns tagged <code>ImportBibtex</code> elsewhere, but is itself untagged</h3>
+<pre class="code">public partial class AddJournalAndBooktitleToPaper : Migration
+{
+    protected override void Up(MigrationBuilder migrationBuilder)
+    {
+        migrationBuilder.AddColumn&lt;string&gt;(name: "Booktitle", table: "Papers", ...);
+        migrationBuilder.AddColumn&lt;string&gt;(name: "Journal", table: "Papers", ...);
+    }
+}
+<span class="tag">// no &amp;line[ImportBibtex] anywhere in this file</span></pre>
+<p><code>Models/Paper.cs:11-12</code> tags the <code>Journal</code> and <code>Booktitle</code> properties <code>&amp;line[ImportBibtex]</code>, and <code>Responses/PaperResponse.cs:20-21</code> does the same. The migration that adds these exact two columns to the database has no annotation at all, so the schema-level half of this feature's traceability is missing while the model- and response-level halves are present.</p>
+</div>
+
+<div class="callout info">
+<h3>Aside: <code>AuthorEndpointTests.cs</code> is the outlier, not <code>PaperEndpointTests.cs</code> / <code>GroupEndpointTests.cs</code></h3>
+<table>
+<thead><tr><th>Test file</th><th>Lines</th><th>Annotation</th></tr></thead>
+<tbody>
+<tr class="warn"><td><code>AuthorEndpointTests.cs</code></td><td>229</td><td><span class="badge warn">&amp;begin[Authors] / &amp;begin[MergeAuthors] — tagged, arguably shouldn't be</span></td></tr>
+<tr class="ok"><td><code>PaperEndpointTests.cs</code></td><td>118</td><td><span class="badge ok">none, consistent with test files being out of scope</span></td></tr>
+<tr class="ok"><td><code>GroupEndpointTests.cs</code></td><td>160</td><td><span class="badge ok">none, consistent with test files being out of scope</span></td></tr>
+</tbody>
+</table>
+<p>Given that test files are out of scope for embedded feature annotation, the odd one out is <code>AuthorEndpointTests.cs</code>, which the agent annotated anyway during the Evolution&nbsp;8 split, not the other two suites lacking annotation. This is an inconsistency in what the agent chose to tag, not a coverage gap, and it is the same asymmetry between <code>Authors</code> and <code>Papers</code>/<code>Groups</code> seen in the <code>ListAuthors</code> vs. missing <code>ListPapers</code>/<code>ListGroups</code> finding above, surfacing here as over-annotation rather than under-annotation.</p>
+</div>
+
+<div class="callout info">
+<h3>Softer, contextual migration cases — judgment calls, not counted as failures</h3>
+<p><code>Migrations/20260424100356_InitialCreate.cs</code> (the original bootstrap migration for <code>Database</code>/<code>ApiDocs</code>/<code>Papers</code>) and <code>Migrations/20260424100754_AddAuthorModel.cs</code> / <code>20260424101024_AddMultipleAffiliations.cs</code> (pre-split author migrations, together 96 lines) carry no annotation either, but they predate most of the feature model's granularity and are harder to fault under the notation as it existed at the time they were written.</p>
+</div>
+
+</div>
+</body>
+</html>
