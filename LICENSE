@@ -1,3 +1,10 @@
+This license applies only to the source code in ReferenceManager/ and
+ReferenceManagerUI/. Non-code content (demonstration transcripts, prompts,
+documentation, and the GitHub Pages site in docs/) is licensed separately
+under CC BY 4.0 — see LICENSE-CONTENT.
+
+---
+
 MIT License
 
 Copyright (c) 2026 Johan Martinson

@@ -4,127 +4,172 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Agent-HAnS Demonstration Dataset</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Newsreader:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #f6f7f9;
-    --panel: #ffffff;
-    --ink: #1c2128;
-    --muted: #5b6472;
-    --border: #dfe3e8;
-    --accent: #2f5d62;
-    --accent-soft: #e4eeee;
+    --paper: #f7f4ec;
+    --paper-2: #e9dfc2;
+    --ink: #22201b;
+    --ink-soft: #5f5849;
+    --rule: #cbbc93;
+    --rust: #b5502a;
+    --rust-dark: #8a3324;
+    --forest: #33593a;
+    --gold: #8c6a1c;
+    --terminal: #211c15;
+    --terminal-fg: #efe6cf;
   }
   * { box-sizing: border-box; }
-  body { font-family: "Inter", -apple-system, Segoe UI, Roboto, sans-serif; margin: 0; background: var(--bg); color: var(--ink); line-height: 1.6; }
-  .wrap { max-width: 1150px; margin: 0 auto; padding: 2.2rem 2rem 4rem; }
-  h1 { font-size: 1.7rem; margin: 0 0 0.3rem; letter-spacing: -0.01em; }
-  h2 { font-size: 1.05rem; margin-top: 2.6rem; color: var(--accent); text-transform: uppercase; letter-spacing: 0.04em; border-bottom: 1px solid var(--border); padding-bottom: 0.4rem; }
-  h3 { font-size: 1rem; margin-top: 1.4rem; }
-  .subtitle { color: var(--muted); margin-top: 0; font-size: 1rem; }
-  code { background: var(--accent-soft); padding: 0.05rem 0.35rem; border-radius: 4px; font-size: 0.88em; color: #1a3b3e; }
-  pre { background: #1e2530; color: #d7dee6; padding: 1rem 1.2rem; border-radius: 10px; overflow-x: auto; font-size: 0.85rem; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font-family: 'Newsreader', Georgia, serif; line-height: 1.7; font-size: 17px; }
+  a { color: var(--rust); }
+  code { font-family: 'JetBrains Mono', ui-monospace, monospace; background: var(--paper-2); padding: 0.05rem 0.35rem; border-radius: 2px; font-size: 0.82em; color: var(--rust-dark); }
+  pre { font-family: 'JetBrains Mono', ui-monospace, monospace; background: var(--terminal); color: var(--terminal-fg); padding: 1.1rem 1.3rem; border-radius: 2px; overflow-x: auto; font-size: 0.82rem; line-height: 1.6; }
   pre code { background: none; padding: 0; color: inherit; }
-  a { color: var(--accent); }
-  table { border-collapse: collapse; width: 100%; margin: 1rem 0 2rem; font-size: 0.88rem; background: var(--panel); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
-  th, td { padding: 0.5rem 0.7rem; text-align: left; vertical-align: top; border-bottom: 1px solid var(--border); }
-  th { background: var(--accent); color: white; font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.03em; }
-  tr:last-child td { border-bottom: none; }
 
-  .cards { display: flex; gap: 1rem; flex-wrap: wrap; margin: 1.4rem 0 2rem; }
-  .card { flex: 1; min-width: 220px; background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 1.1rem 1.3rem; text-decoration: none; color: var(--ink); box-shadow: 0 1px 2px rgba(20,20,30,0.04); transition: box-shadow 0.15s, transform 0.15s; }
-  .card:hover { box-shadow: 0 4px 14px rgba(20,20,30,0.10); transform: translateY(-1px); }
-  .card .card-title { font-weight: 700; font-size: 1rem; color: var(--accent); margin-bottom: 0.3rem; }
-  .card .card-desc { font-size: 0.85rem; color: var(--muted); }
+  .sitehead { background: var(--paper); border-bottom: 3px solid var(--ink); position: sticky; top: 0; z-index: 10; }
+  .sitehead-inner { max-width: 1150px; margin: 0 auto; padding: 0 2rem; display: flex; align-items: stretch; justify-content: space-between; flex-wrap: wrap; }
+  .brand { font-family: 'JetBrains Mono', monospace; font-weight: 700; text-decoration: none; color: var(--ink); font-size: 0.92rem; padding: 1.05rem 0; letter-spacing: -0.01em; }
+  .brand .hash { color: var(--rust); }
+  .tabs { display: flex; }
+  .tabs a { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; text-decoration: none; color: var(--ink-soft); padding: 1.2rem 1.1rem; border-left: 1px solid var(--rule); display: flex; align-items: center; }
+  .tabs a:last-child { border-right: 1px solid var(--rule); }
+  .tabs a:hover { color: var(--rust); background: var(--paper-2); }
+  .tabs a.active { color: var(--paper); background: var(--ink); }
 
-  .note { background: var(--panel); border: 1px solid var(--border); border-left: 4px solid var(--accent); border-radius: 8px; padding: 0.9rem 1.2rem; font-size: 0.88rem; margin: 1.2rem 0; }
+  .wrap { max-width: 1150px; margin: 0 auto; padding: 3rem 2rem 5rem; }
 
-  .sitehead { background: var(--accent); position: sticky; top: 0; z-index: 10; box-shadow: 0 1px 4px rgba(0,0,0,0.12); }
-  .sitehead-inner { max-width: 1150px; margin: 0 auto; padding: 0.9rem 2rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.6rem; }
-  .sitehead .brand { color: white; font-weight: 700; text-decoration: none; font-size: 0.95rem; letter-spacing: -0.01em; }
-  .sitehead nav { display: flex; gap: 1.3rem; }
-  .sitehead nav a { color: #dcebe9; text-decoration: none; font-size: 0.85rem; font-weight: 600; }
-  .sitehead nav a:hover, .sitehead nav a.active { color: white; text-decoration: underline; }
+  .masthead { border-bottom: 4px double var(--ink); padding-bottom: 1.6rem; margin-bottom: 2.4rem; }
+  .kicker { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; color: var(--rust); margin-bottom: 0.5rem; }
+  h1 { font-family: 'JetBrains Mono', monospace; font-weight: 800; font-size: 2.1rem; margin: 0 0 0.6rem; letter-spacing: -0.02em; text-transform: uppercase; }
+  .dek { font-style: italic; color: var(--ink-soft); font-size: 1.15rem; max-width: 62ch; margin: 0; }
+
+  .layout { display: grid; grid-template-columns: 1fr 230px; gap: 3rem; align-items: start; }
+  .main h2 { font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--rust); border-top: 1px solid var(--rule); padding-top: 1.6rem; margin-top: 2.6rem; }
+  .main h2:first-child { margin-top: 0; }
+  .main h3 { font-family: 'JetBrains Mono', monospace; font-size: 0.95rem; margin-top: 1.6rem; }
+  .main p { margin: 0.8rem 0; }
+  .main table { border-collapse: collapse; width: 100%; margin: 1rem 0 1.5rem; font-size: 0.92rem; }
+  .main th, .main td { padding: 0.45rem 0.6rem; text-align: left; border-bottom: 1px solid var(--rule); }
+  .main th { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-soft); border-bottom: 2px solid var(--ink); }
+
+  .margin { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; color: var(--ink-soft); border-left: 2px dashed var(--rule); padding-left: 1.2rem; }
+  .margin .note { margin-bottom: 1.6rem; }
+  .margin .note .n { display: block; font-size: 1.5rem; font-weight: 700; color: var(--ink); line-height: 1.2; }
+  .margin .note .l { color: var(--ink-soft); }
+  .margin .note .l::before { content: "// "; color: var(--rust); }
+
+  .ledger { border-top: 2px solid var(--ink); margin: 1.2rem 0 2.5rem; }
+  .ledger a { display: grid; grid-template-columns: 2.4rem 1fr auto; align-items: baseline; gap: 1rem; padding: 1rem 0.2rem; text-decoration: none; color: var(--ink); border-bottom: 1px solid var(--rule); }
+  .ledger a:hover { background: var(--paper-2); }
+  .ledger a:hover .go { color: var(--rust); }
+  .ledger .num { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--rust); font-size: 1.1rem; }
+  .ledger .txt strong { display: block; font-family: 'JetBrains Mono', monospace; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.02em; }
+  .ledger .txt span { color: var(--ink-soft); font-size: 0.88rem; font-style: italic; }
+  .ledger .go { font-family: 'JetBrains Mono', monospace; color: var(--rule); font-size: 1.1rem; }
+
+  .callout { background: var(--paper-2); border-left: 4px solid var(--gold); padding: 1rem 1.3rem; font-size: 0.9rem; margin: 1.5rem 0; }
+
+  .divlegend { display: flex; gap: 1.4rem; flex-wrap: wrap; font-family: 'JetBrains Mono', monospace; font-size: 0.74rem; color: var(--ink-soft); margin: 0.4rem 0 0.9rem; }
+  .divlegend .sw { display: inline-block; width: 10px; height: 10px; margin-right: 0.4rem; vertical-align: middle; }
+  .divlegend .sw.neg { background: var(--rust-dark); }
+  .divlegend .sw.pos { background: var(--forest); }
+  .divchart { margin-bottom: 2.4rem; }
+  .divrow { display: grid; grid-template-columns: 1fr 2px 1fr; align-items: center; column-gap: 0; min-width: 220px; }
+  .evtable th:last-child, .evtable td:last-child { min-width: 240px; }
+  .evtable th:last-child { text-align: center; }
+  .divneg, .divpos { display: flex; align-items: center; gap: 0.45rem; min-height: 14px; }
+  .divneg { justify-content: flex-end; }
+  .divpos { justify-content: flex-start; }
+  .divzero { background: var(--ink); align-self: stretch; width: 2px; }
+  .divbar { position: relative; height: 14px; min-width: 3px; }
+  .divneg .divbar { background: var(--rust-dark); border-radius: 2px 0 0 2px; }
+  .divpos .divbar { background: var(--forest); border-radius: 0 2px 2px 0; }
+  .divval { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; color: var(--ink-soft); white-space: nowrap; }
+  .divbar[data-tip]:hover::after, .divbar[data-tip]:focus::after {
+    content: attr(data-tip); position: absolute; bottom: 130%; left: 50%; transform: translateX(-50%);
+    background: var(--terminal); color: var(--terminal-fg); font-size: 0.68rem; font-weight: 700;
+    padding: 0.3rem 0.6rem; border-radius: 3px; white-space: nowrap; z-index: 5; pointer-events: none;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .divbar:hover, .divbar:focus { filter: brightness(1.15); outline: none; }
 </style>
 </head>
 <body>
 <header class="sitehead">
   <div class="sitehead-inner">
-    <a class="brand" href="index.html">Agent-HAnS Demonstration Dataset</a>
-    <nav>
+    <a class="brand" href="index.html"><span class="hash">#</span> johmara/agentic-traceability-maintenance-dataset</a>
+    <nav class="tabs">
       <a href="index.html" class="active">Home</a>
       <a href="contents.html">Repository</a>
-      <a href="audit.html">Audit Report</a>
-      <a href="https://github.com/johmara/agentic-traceability-maintenance-dataset" target="_blank" rel="noopener">GitHub&nbsp;↗</a>
+      <a href="audit.html">Audit</a>
+      <a href="history.html">History</a>
+      <a href="https://github.com/johmara/agentic-traceability-maintenance-dataset" target="_blank" rel="noopener">GitHub ↗</a>
     </nav>
   </div>
 </header>
+
 <div class="wrap">
 
-<h1>ReferenceManager Dataset</h1>
-<p class="subtitle">Companion artifact for <em>Agent-HAnS: Maintaining Feature and Code Traceability in Agentic Development</em> (ASE&nbsp;2026). A C#/.NET&nbsp;9 web API developed entirely through agentic coding, with its feature model and embedded feature annotations maintained automatically at every step.</p>
-
-<div class="cards">
-  <a class="card" href="contents.html">
-    <div class="card-title">Repository →</div>
-    <div class="card-desc">Browse the dataset's structure — the ReferenceManager API, the frontend, and the demonstration transcripts — with links to the source on GitHub.</div>
-  </a>
-  <a class="card" href="audit.html">
-    <div class="card-title">Audit Report →</div>
-    <div class="card-desc">A full manual audit of every feature-to-file mapping and fragment annotation in the final artifact, checking both correctness and coverage.</div>
-  </a>
-  <a class="card" href="https://github.com/johmara/agentic-traceability-maintenance-dataset" target="_blank" rel="noopener">
-    <div class="card-title">Source on GitHub →</div>
-    <div class="card-desc">Clone the repository, run the API and frontend locally, or inspect the raw commit history.</div>
-  </a>
+<div class="masthead">
+  <div class="kicker">Companion Artifact — ASE 2026</div>
+  <h1>ReferenceManager Dataset</h1>
+  <p class="dek">Agent-HAnS: Maintaining Feature and Code Traceability in Agentic Development. A C#/.NET&nbsp;9 web API developed entirely through agentic coding, its feature model and embedded annotations maintained automatically at every step.</p>
 </div>
 
-<h2>Contents</h2>
-<pre><code>ReferenceManager/       C#/.NET 9 web API developed entirely through agentic coding
-ReferenceManagerUI/     Single-page frontend for live demonstration
-demonstration/          Transcripts of all 10 evolution steps
-annotation-audit.html   Manual audit of every feature-to-file mapping and fragment annotation
-README.md               Full documentation</code></pre>
+<div class="layout">
+  <div class="main">
 
-<h2>ReferenceManager</h2>
-<p>A web API for managing research paper references, built with .NET&nbsp;9, Entity Framework Core, and SQLite. Developed entirely through agentic coding using Claude Code.</p>
-<p><strong>Final state:</strong> 85 source files, 2,971 lines of C# application code, 25 features across six top-level concerns.</p>
-
-<h3>Build and run</h3>
-<pre><code>cd ReferenceManager
+    <h2>ReferenceManager</h2>
+    <p>A web API for managing research paper references, built with .NET&nbsp;9, Entity Framework Core, and SQLite. Developed entirely through agentic coding using Claude Code.</p>
+    <h3>Build and run</h3>
+    <pre>cd ReferenceManager
 dotnet run
-# API + Scalar UI available at http://localhost:5062/scalar/v1</code></pre>
+<span style="color:#8f8672"># API + Scalar UI at http://localhost:5062/scalar/v1</span></pre>
 
-<h2>ReferenceManagerUI</h2>
-<p>A single-file browser frontend (<code>ReferenceManagerUI/index.html</code>) for interacting with the API. No build step or Node.js required.</p>
-<p>The UI covers all API features: paper CRUD, full-text search, BibTeX import/export, group management, and author management.</p>
+    <h2>ReferenceManagerUI</h2>
+    <p>A single-file browser frontend (<code>ReferenceManagerUI/index.html</code>) for interacting with the API, no build step or Node.js required. Covers paper CRUD, full-text search, BibTeX import/export, group management, and author management.</p>
 
-<h2>Demonstration transcripts</h2>
-<p><code>demonstration/</code> contains one file per evolution step, verbatim transcripts of the agentic coding session, showing the developer prompt, Claude Code's tool calls and output, and the automatic feature model update after each coding cycle.</p>
+    <h2>Demonstration transcripts</h2>
+    <p><code>demonstration/</code> holds one verbatim Claude Code session per evolution step, showing the developer prompt, the agent's tool calls, and the automatic feature model update after each cycle.</p>
+    <div class="divlegend"><span><i class="sw neg"></i>Lines removed</span><span><i class="sw pos"></i>Lines added</span></div>
+    <table class="evtable">
+      <thead><tr><th>Ev.</th><th>Feature model change</th><th>Type</th><th>Starts at</th><th>Change size</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td><code>Database</code>, <code>ApiDocs</code>, <code>Papers</code></td><td>Add</td><td><code><a href="https://github.com/johmara/agentic-traceability-maintenance-dataset/commit/ed213803cea5f8a8051f862e3583b00145585bc0" target="_blank" rel="noopener">ed21380</a></code></td><td><div class="divrow"><div class="divneg"></div><div class="divzero"></div><div class="divpos"><div class="divbar" style="width:20.2%" tabindex="0" data-tip="Evolution 1 — +157 LoC"></div><span class="divval">+157</span></div></div></td></tr>
+        <tr><td>2</td><td><code>Collections</code>, <code>Versioning</code></td><td>Add</td><td><code><a href="https://github.com/johmara/agentic-traceability-maintenance-dataset/commit/b45824a2d36847df215a26e4055299285552153f" target="_blank" rel="noopener">b45824a</a></code></td><td><div class="divrow"><div class="divneg"><span class="divval">−75</span><div class="divbar" style="width:9.7%" tabindex="0" data-tip="Evolution 2 — −75 LoC"></div></div><div class="divzero"></div><div class="divpos"><div class="divbar" style="width:100%" tabindex="0" data-tip="Evolution 2 — +776 LoC"></div><span class="divval">+776</span></div></div></td></tr>
+        <tr><td>3</td><td><code>Tags</code></td><td>Add</td><td><code><a href="https://github.com/johmara/agentic-traceability-maintenance-dataset/commit/e6688f462d74fc624977e0612378dbe7d4335669" target="_blank" rel="noopener">e6688f4</a></code></td><td><div class="divrow"><div class="divneg"></div><div class="divzero"></div><div class="divpos"><div class="divbar" style="width:14.8%" tabindex="0" data-tip="Evolution 3 — +115 LoC"></div><span class="divval">+115</span></div></div></td></tr>
+        <tr><td>4</td><td><code>Favorites</code></td><td>Add</td><td><code><a href="https://github.com/johmara/agentic-traceability-maintenance-dataset/commit/17b8b03aa2100b253ba3f3cf1e6bd8731ef11705" target="_blank" rel="noopener">17b8b03</a></code></td><td><div class="divrow"><div class="divneg"></div><div class="divzero"></div><div class="divpos"><div class="divbar" style="width:5.2%" tabindex="0" data-tip="Evolution 4 — +40 LoC"></div><span class="divval">+40</span></div></div></td></tr>
+        <tr><td>5</td><td><code>Tags</code> + <code>Collections</code> → <code>Groups</code></td><td>Merge</td><td><code><a href="https://github.com/johmara/agentic-traceability-maintenance-dataset/commit/db3b9fad76295229c442e33f1c3dab7964a05080" target="_blank" rel="noopener">db3b9fa</a></code></td><td><div class="divrow"><div class="divneg"><span class="divval">−388</span><div class="divbar" style="width:50%" tabindex="0" data-tip="Evolution 5 — −388 LoC"></div></div><div class="divzero"></div><div class="divpos"><div class="divbar" style="width:37%" tabindex="0" data-tip="Evolution 5 — +287 LoC"></div><span class="divval">+287</span></div></div></td></tr>
+        <tr><td>6</td><td><code>Papers.ImportBibTex</code></td><td>Add</td><td><code><a href="https://github.com/johmara/agentic-traceability-maintenance-dataset/commit/d189e0ccabb3f3d15706926b265bd9a8fb4da71b" target="_blank" rel="noopener">d189e0c</a></code></td><td><div class="divrow"><div class="divneg"></div><div class="divzero"></div><div class="divpos"><div class="divbar" style="width:50.9%" tabindex="0" data-tip="Evolution 6 — +395 LoC"></div><span class="divval">+395</span></div></div></td></tr>
+        <tr><td>7</td><td><code>Papers.ExportBibTex</code></td><td>Add</td><td><code><a href="https://github.com/johmara/agentic-traceability-maintenance-dataset/commit/2857c5a7487fe67be29d7ea9e3bb4b540ca9cd49" target="_blank" rel="noopener">2857c5a</a></code></td><td><div class="divrow"><div class="divneg"><span class="divval">−5</span><div class="divbar" style="width:0.6%" tabindex="0" data-tip="Evolution 7 — −5 LoC"></div></div><div class="divzero"></div><div class="divpos"><div class="divbar" style="width:14.3%" tabindex="0" data-tip="Evolution 7 — +111 LoC"></div><span class="divval">+111</span></div></div></td></tr>
+        <tr><td>8</td><td><code>Papers.Authors</code> → <code>Authors</code></td><td>Split</td><td><code><a href="https://github.com/johmara/agentic-traceability-maintenance-dataset/commit/975d7a4d28acd58f4b896fc2bff53169950036e3" target="_blank" rel="noopener">975d7a4</a></code></td><td><div class="divrow"><div class="divneg"><span class="divval">−119</span><div class="divbar" style="width:15.3%" tabindex="0" data-tip="Evolution 8 — −119 LoC"></div></div><div class="divzero"></div><div class="divpos"><div class="divbar" style="width:61.1%" tabindex="0" data-tip="Evolution 8 — +474 LoC"></div><span class="divval">+474</span></div></div></td></tr>
+        <tr><td>9</td><td><code>Papers.SearchPapers</code></td><td>Add</td><td><code><a href="https://github.com/johmara/agentic-traceability-maintenance-dataset/commit/f91dc2882889303ff7898ba7b8f191cdf81f0fd3" target="_blank" rel="noopener">f91dc28</a></code></td><td><div class="divrow"><div class="divneg"><span class="divval">−10</span><div class="divbar" style="width:1.3%" tabindex="0" data-tip="Evolution 9 — −10 LoC"></div></div><div class="divzero"></div><div class="divpos"><div class="divbar" style="width:14.4%" tabindex="0" data-tip="Evolution 9 — +112 LoC"></div><span class="divval">+112</span></div></div></td></tr>
+        <tr><td>10</td><td>− <code>Favorites</code></td><td>Remove</td><td><code><a href="https://github.com/johmara/agentic-traceability-maintenance-dataset/commit/ba1919f313e40064fdd298207243cd61532800f0" target="_blank" rel="noopener">ba1919f</a></code></td><td><div class="divrow"><div class="divneg"><span class="divval">−45</span><div class="divbar" style="width:5.8%" tabindex="0" data-tip="Evolution 10 — −45 LoC"></div></div><div class="divzero"></div><div class="divpos"><div class="divbar" style="width:0.13%" tabindex="0" data-tip="Evolution 10 — +1 LoC"></div><span class="divval">+1</span></div></div></td></tr>
+      </tbody>
+    </table>
+    <p><code>demonstration/prompts.md</code> lists all 27 developer prompts. <code>demonstration/result-stats.md</code> reports final cloc statistics. Full history, mapped commit-by-commit to each step, is on the <a href="history.html">History</a> page.</p>
 
-<table>
-<thead><tr><th>Evolution</th><th>Feature model change</th><th>Type</th></tr></thead>
-<tbody>
-<tr><td>1</td><td><code>Database</code>, <code>ApiDocs</code>, <code>Papers</code></td><td>Add</td></tr>
-<tr><td>2</td><td><code>Collections</code>, <code>Versioning</code></td><td>Add</td></tr>
-<tr><td>3</td><td><code>Tags</code></td><td>Add</td></tr>
-<tr><td>4</td><td><code>Favorites</code></td><td>Add</td></tr>
-<tr><td>5</td><td><code>Tags</code> + <code>Collections</code> → <code>Groups</code></td><td>Merge</td></tr>
-<tr><td>6</td><td><code>Papers.ImportBibTex</code></td><td>Add</td></tr>
-<tr><td>7</td><td><code>Papers.ExportBibTex</code></td><td>Add</td></tr>
-<tr><td>8</td><td><code>Papers.Authors</code> → <code>Authors</code></td><td>Split</td></tr>
-<tr><td>9</td><td><code>Papers.SearchPapers</code></td><td>Add</td></tr>
-<tr><td>10</td><td>− <code>Favorites</code></td><td>Remove</td></tr>
-</tbody>
-</table>
+    <h2>Annotation audit</h2>
+    <p>The <a href="audit.html">audit report</a> checks every <code>.feature-to-file</code> mapping and embedded fragment annotation against the feature model and the code it annotates, distinguishing stale mappings, misplaced or over-broad annotations, and files that implement a feature but carry none.</p>
 
-<p><code>demonstration/prompts.md</code> lists all 27 developer prompts across the 10 evolution steps.<br>
-<code>demonstration/result-stats.md</code> reports final cloc statistics for the codebase.</p>
+    <div class="callout"><strong>Redaction note.</strong> Personal and organizational identifiers are redacted: the developer's name reads <em>A. Developer</em>, the employer <em>The Company</em>, and file system paths are relative.</div>
 
-<h2>Annotation audit</h2>
-<p>The <a href="audit.html">audit report</a> is a manual audit of the final <code>ReferenceManager</code> state, checking every <code>.feature-to-file</code> mapping and every embedded fragment annotation against the feature model and the code it annotates. It distinguishes stale mappings (referencing a feature removed by a merge or split), misplaced or over-broad fragment annotations, and files that implement a feature but carry no annotation at all.</p>
+    <h2>License</h2>
+    <p>Source code in <code>ReferenceManager/</code> and <code>ReferenceManagerUI/</code> is licensed under the <a href="https://github.com/johmara/agentic-traceability-maintenance-dataset/blob/main/LICENSE" target="_blank" rel="noopener">MIT License</a>. Everything else, <code>demonstration/</code>, this README, <code>annotation-audit.html</code>, and this site, is licensed under <a href="https://github.com/johmara/agentic-traceability-maintenance-dataset/blob/main/LICENSE-CONTENT" target="_blank" rel="noopener">CC BY 4.0</a>.</p>
 
-<div class="note">
-<strong>Redaction note:</strong> Personal and organizational identifiers have been redacted. The developer's name is replaced with <em>A. Developer</em>, the employing organization with <em>The Company</em>, and local file system paths are relative.
+  </div>
+
+  <aside class="margin">
+    <div class="note"><span class="n">25</span><span class="l">features in the final model</span></div>
+    <div class="note"><span class="n">85</span><span class="l">source files, all languages</span></div>
+    <div class="note"><span class="n">44</span><span class="l">generated C# files</span></div>
+    <div class="note"><span class="n">2,971</span><span class="l">lines of application code</span></div>
+    <div class="note"><span class="n">27</span><span class="l">developer prompts</span></div>
+    <div class="note"><span class="n">10</span><span class="l">evolution steps</span></div>
+    <div class="note"><span class="n">4</span><span class="l">structural change types</span></div>
+  </aside>
 </div>
 
 </div>

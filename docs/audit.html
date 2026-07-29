@@ -4,92 +4,131 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Annotation Audit — Agent-HAnS Demonstration Dataset</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Newsreader:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #f6f7f9;
-    --panel: #ffffff;
-    --ink: #1c2128;
-    --muted: #5b6472;
-    --border: #dfe3e8;
-    --accent: #2f5d62;
-    --accent-soft: #e4eeee;
+    --paper: #f7f4ec;
+    --paper-2: #e9dfc2;
+    --ink: #22201b;
+    --ink-soft: #5f5849;
+    --rule: #cbbc93;
+    --rust: #b5502a;
+    --rust-dark: #8a3324;
+    --forest: #33593a;
+    --gold: #8c6a1c;
+    --terminal: #211c15;
+    --terminal-fg: #efe6cf;
+    --terminal-fg-dim: #8f8672;
 
-    --ok-fg: #1f6f4a;   --ok-bg: #e9f6ee;   --ok-bd: #b7e0c8;
-    --warn-fg: #8a5a00;  --warn-bg: #fff4e0;  --warn-bd: #f2d18a;
-    --bad-fg:  #a3312a;  --bad-bg:  #fdecea;  --bad-bd:  #f0bcb6;
+    --ok-fg: var(--forest);   --ok-bg: #e3ead9;   --ok-bd: #a9c295;
+    --warn-fg: var(--gold);   --warn-bg: #f1e3c4;  --warn-bd: #d2b061;
+    --bad-fg:  var(--rust-dark); --bad-bg: #f3ddd2;  --bad-bd: #d69a80;
   }
   * { box-sizing: border-box; }
-  body { font-family: "Inter", -apple-system, Segoe UI, Roboto, sans-serif; margin: 0; background: var(--bg); color: var(--ink); line-height: 1.55; }
-  .wrap { max-width: 1150px; margin: 0 auto; padding: 2.2rem 2rem 4rem; }
-  h1 { font-size: 1.55rem; margin: 0 0 0.2rem; letter-spacing: -0.01em; }
-  h2 { font-size: 1.05rem; margin-top: 2.6rem; color: var(--accent); text-transform: uppercase; letter-spacing: 0.04em; border-bottom: 1px solid var(--border); padding-bottom: 0.4rem; }
-  h3 { font-size: 1rem; margin-top: 1.6rem; }
-  .subtitle { color: var(--muted); margin-top: 0; font-size: 0.95rem; }
-  .legend { display: flex; gap: 1.2rem; flex-wrap: wrap; margin: 1rem 0 0; font-size: 0.82rem; color: var(--muted); }
-  .legend span.dot { display: inline-block; width: 0.6rem; height: 0.6rem; border-radius: 50%; margin-right: 0.35rem; vertical-align: middle; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font-family: 'Newsreader', Georgia, serif; line-height: 1.65; font-size: 16.5px; }
+  .wrap { max-width: 1150px; margin: 0 auto; padding: 3rem 2rem 5rem; }
+  .masthead { border-bottom: 4px double var(--ink); padding-bottom: 1.6rem; margin-bottom: 2.2rem; }
+  .kicker { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; color: var(--rust); margin-bottom: 0.5rem; }
+  h1 { font-family: 'JetBrains Mono', monospace; font-weight: 800; font-size: 2rem; margin: 0 0 0.6rem; letter-spacing: -0.02em; text-transform: uppercase; }
+  h2 { font-family: 'JetBrains Mono', monospace; font-size: 0.88rem; margin-top: 2.6rem; color: var(--rust); text-transform: uppercase; letter-spacing: 0.06em; border-top: 1px solid var(--rule); padding-top: 1.4rem; }
+  h3 { font-family: 'JetBrains Mono', monospace; font-size: 0.95rem; margin-top: 1.6rem; }
+  .subtitle { color: var(--ink-soft); margin-top: 0; font-size: 1.05rem; font-style: italic; max-width: 72ch; }
+  .legend { display: flex; gap: 1.4rem; flex-wrap: wrap; margin: 1.2rem 0 0; font-size: 0.82rem; color: var(--ink-soft); font-family: 'JetBrains Mono', monospace; }
+  .legend span.dot { display: inline-block; width: 0.6rem; height: 0.6rem; margin-right: 0.4rem; vertical-align: middle; transform: rotate(45deg); }
   .dot.ok { background: var(--ok-fg); }
   .dot.warn { background: var(--warn-fg); }
   .dot.bad { background: var(--bad-fg); }
 
   .summary { display: flex; gap: 0.9rem; flex-wrap: wrap; margin: 1.5rem 0; }
-  .stat { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 0.9rem 1.2rem; flex: 1; min-width: 150px; box-shadow: 0 1px 2px rgba(20,20,30,0.04); }
-  .stat .num { font-size: 1.5rem; font-weight: 700; display: block; }
-  .stat .label { font-size: 0.78rem; color: var(--muted); }
+  .stat { background: var(--paper-2); border: 1px solid var(--rule); padding: 0.9rem 1.2rem; flex: 1; min-width: 150px; }
+  .stat .num { font-family: 'JetBrains Mono', monospace; font-size: 1.6rem; font-weight: 700; display: block; }
+  .stat .label { font-size: 0.8rem; color: var(--ink-soft); font-style: italic; }
   .stat.ok .num { color: var(--ok-fg); }
   .stat.warn .num { color: var(--warn-fg); }
   .stat.bad .num { color: var(--bad-fg); }
 
-  table { border-collapse: collapse; width: 100%; margin: 1rem 0 2rem; font-size: 0.86rem; background: var(--panel); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
-  th, td { padding: 0.5rem 0.7rem; text-align: left; vertical-align: top; border-bottom: 1px solid var(--border); }
-  th { background: var(--accent); color: white; font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.03em; }
+  table { border-collapse: collapse; width: 100%; margin: 1rem 0 2rem; font-size: 0.86rem; background: var(--paper-2); border: 1px solid var(--rule); }
+  th, td { padding: 0.5rem 0.7rem; text-align: left; vertical-align: top; border-bottom: 1px solid var(--rule); }
+  th { font-family: 'JetBrains Mono', monospace; background: var(--ink); color: var(--paper); font-weight: 700; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; }
   tr:last-child td { border-bottom: none; }
-  tr.ok td:first-child { border-left: 3px solid var(--ok-fg); }
-  tr.warn td:first-child { border-left: 3px solid var(--warn-fg); }
-  tr.bad td:first-child { border-left: 3px solid var(--bad-fg); }
+  tr.ok td:first-child { border-left: 4px solid var(--ok-fg); }
+  tr.warn td:first-child { border-left: 4px solid var(--warn-fg); }
+  tr.bad td:first-child { border-left: 4px solid var(--bad-fg); }
   tr.ok { background: var(--ok-bg); }
   tr.warn { background: var(--warn-bg); }
   tr.bad { background: var(--bad-bg); }
 
-  .badge { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.15rem 0.55rem; border-radius: 20px; font-size: 0.74rem; font-weight: 700; white-space: nowrap; }
-  .badge.ok { background: var(--ok-bg); color: var(--ok-fg); border: 1px solid var(--ok-bd); }
-  .badge.warn { background: var(--warn-bg); color: var(--warn-fg); border: 1px solid var(--warn-bd); }
-  .badge.bad { background: var(--bad-bg); color: var(--bad-fg); border: 1px solid var(--bad-bd); }
+  .badge { display: inline-block; font-family: 'JetBrains Mono', monospace; font-weight: 800; font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.12rem 0.5rem; border: 2px solid currentColor; white-space: nowrap; }
+  .badge.ok { color: var(--ok-fg); }
+  .badge.warn { color: var(--warn-fg); }
+  .badge.bad { color: var(--bad-fg); }
 
-  code { background: var(--accent-soft); padding: 0.05rem 0.35rem; border-radius: 4px; font-size: 0.88em; color: #1a3b3e; }
-  pre.model { background: #1e2530; color: #d7dee6; padding: 1rem 1.2rem; border-radius: 10px; overflow-x: auto; font-size: 0.85rem; }
-  pre.code { background: #1e2530; color: #d7dee6; padding: 0.8rem 1rem; border-radius: 8px; overflow-x: auto; font-size: 0.8rem; margin: 0.4rem 0; }
-  pre.code .tag { color: #f2c14e; }
-  .note { font-size: 0.86rem; color: var(--muted); margin-top: -0.3rem; }
-  .toc { display: flex; gap: 1.3rem; flex-wrap: wrap; font-size: 0.85rem; margin-top: 0.8rem; }
-  .toc a { color: var(--accent); text-decoration: none; font-weight: 600; }
+  code { font-family: 'JetBrains Mono', ui-monospace, monospace; background: var(--paper-2); padding: 0.05rem 0.35rem; border-radius: 2px; font-size: 0.85em; color: var(--rust-dark); }
+  pre.model { font-family: 'JetBrains Mono', ui-monospace, monospace; background: var(--terminal); color: var(--terminal-fg); padding: 1.1rem 1.3rem; overflow-x: auto; font-size: 0.85rem; }
+  pre.code { font-family: 'JetBrains Mono', ui-monospace, monospace; background: var(--terminal); color: var(--terminal-fg); padding: 0.9rem 1.1rem; overflow-x: auto; font-size: 0.8rem; margin: 0.4rem 0; }
+  pre.code .tag { color: #e8b876; }
+  .note { font-size: 0.9rem; color: var(--ink-soft); font-style: italic; margin-top: -0.3rem; }
+  .toc { display: flex; gap: 1.3rem; flex-wrap: wrap; font-family: 'JetBrains Mono', monospace; font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.04em; margin-top: 1rem; }
+  .toc a { color: var(--rust); text-decoration: none; font-weight: 700; }
   .toc a:hover { text-decoration: underline; }
-  .callout { background: var(--panel); border: 1px solid var(--warn-bd); border-left: 4px solid var(--warn-fg); border-radius: 8px; padding: 1rem 1.2rem; margin: 1rem 0; }
-  .callout.info { border-left-color: var(--accent); border-color: var(--border); }
+  .callout { background: var(--paper-2); border: 1px solid var(--warn-bd); border-left: 4px solid var(--warn-fg); padding: 1rem 1.3rem; margin: 1.2rem 0; }
+  .callout.info { border-left-color: var(--ink-soft); border-color: var(--rule); }
 
-  .sitehead { background: var(--accent); position: sticky; top: 0; z-index: 10; box-shadow: 0 1px 4px rgba(0,0,0,0.12); }
-  .sitehead-inner { max-width: 1150px; margin: 0 auto; padding: 0.9rem 2rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.6rem; }
-  .sitehead .brand { color: white; font-weight: 700; text-decoration: none; font-size: 0.95rem; letter-spacing: -0.01em; }
-  .sitehead nav { display: flex; gap: 1.3rem; }
-  .sitehead nav a { color: #dcebe9; text-decoration: none; font-size: 0.85rem; font-weight: 600; }
-  .sitehead nav a:hover, .sitehead nav a.active { color: white; text-decoration: underline; }
+  .sitehead { background: var(--paper); border-bottom: 3px solid var(--ink); position: sticky; top: 0; z-index: 10; }
+  .sitehead-inner { max-width: 1150px; margin: 0 auto; padding: 0 2rem; display: flex; align-items: stretch; justify-content: space-between; flex-wrap: wrap; }
+  .brand { font-family: 'JetBrains Mono', monospace; font-weight: 700; text-decoration: none; color: var(--ink); font-size: 0.92rem; padding: 1.05rem 0; letter-spacing: -0.01em; }
+  .brand .hash { color: var(--rust); }
+  .tabs { display: flex; }
+  .tabs a { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; text-decoration: none; color: var(--ink-soft); padding: 1.2rem 1.1rem; border-left: 1px solid var(--rule); display: flex; align-items: center; }
+  .tabs a:last-child { border-right: 1px solid var(--rule); }
+  .tabs a:hover { color: var(--rust); background: var(--paper-2); }
+  .tabs a.active { color: var(--paper); background: var(--ink); }
+
+  .statbar-block { margin: 1.6rem 0 2.4rem; }
+  .statbar-row { margin-bottom: 1rem; }
+  .statbar-label { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; display: flex; justify-content: space-between; margin-bottom: 0.4rem; color: var(--ink); }
+  .statbar-total { color: var(--ink-soft); font-weight: 400; }
+  .statbar-track { display: flex; height: 28px; background: var(--paper-2); border: 1px solid var(--rule); border-radius: 3px; overflow: hidden; }
+  .statbar-seg { position: relative; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; font-weight: 700; color: var(--paper); white-space: nowrap; overflow: hidden; cursor: default; }
+  .statbar-seg + .statbar-seg { margin-left: 2px; }
+  .statbar-seg.ok { background: var(--forest); }
+  .statbar-seg.warn { background: var(--gold); }
+  .statbar-seg.bad { background: var(--rust-dark); }
+  .statbar-seg:hover, .statbar-seg:focus { filter: brightness(1.12); outline: none; }
+  .statbar-seg[data-tip]:hover::after, .statbar-seg[data-tip]:focus::after {
+    content: attr(data-tip); position: absolute; bottom: 130%; left: 50%; transform: translateX(-50%);
+    background: var(--terminal); color: var(--terminal-fg); font-size: 0.7rem; font-weight: 700;
+    padding: 0.3rem 0.6rem; border-radius: 3px; white-space: nowrap; z-index: 5; pointer-events: none;
+  }
+  .statlegend { display: flex; gap: 1.4rem; flex-wrap: wrap; font-family: 'JetBrains Mono', monospace; font-size: 0.76rem; color: var(--ink-soft); margin-top: 0.8rem; }
+  .statlegend .sw { display: inline-block; width: 10px; height: 10px; margin-right: 0.4rem; vertical-align: middle; }
+  .sw.ok { background: var(--forest); }
+  .sw.warn { background: var(--gold); }
+  .sw.bad { background: var(--rust-dark); }
 </style>
 </head>
 <body>
 <header class="sitehead">
   <div class="sitehead-inner">
-    <a class="brand" href="index.html">Agent-HAnS Demonstration Dataset</a>
-    <nav>
+    <a class="brand" href="index.html"><span class="hash">#</span> johmara/agentic-traceability-maintenance-dataset</a>
+    <nav class="tabs">
       <a href="index.html">Home</a>
       <a href="contents.html">Repository</a>
-      <a href="audit.html" class="active">Audit Report</a>
-      <a href="https://github.com/johmara/agentic-traceability-maintenance-dataset" target="_blank" rel="noopener">GitHub&nbsp;↗</a>
+      <a href="audit.html" class="active">Audit</a>
+      <a href="history.html">History</a>
+      <a href="https://github.com/johmara/agentic-traceability-maintenance-dataset" target="_blank" rel="noopener">GitHub ↗</a>
     </nav>
   </div>
 </header>
 <div class="wrap">
 
-<h1>Agent-HAnS Annotation Audit</h1>
-<p class="subtitle">Manual audit of <code>ReferenceManager</code> — final state after 27 prompts / 10 evolution steps. Verifies both <strong>resolution</strong> (does the referenced feature exist?) and <strong>placement</strong> (does the annotated code actually implement that feature?).</p>
+<div class="masthead">
+  <div class="kicker">$ audit --verify ReferenceManager/</div>
+  <h1>Agent-HAnS Annotation Audit</h1>
+  <p class="subtitle">Manual audit of <code>ReferenceManager</code> — final state after 27 prompts / 10 evolution steps. Verifies both <strong>resolution</strong> (does the referenced feature exist?) and <strong>placement</strong> (does the annotated code actually implement that feature?).</p>
+</div>
 
 <div class="legend">
   <span><span class="dot ok"></span>correct — feature exists and code matches</span>
@@ -146,6 +185,28 @@
   <div class="stat ok"><span class="num">25 / 25</span><span class="label">features covered by fragments</span></div>
 </div>
 <p>Structural validity (balanced blocks, names resolving to real features) is not the same as placement correctness. All 36 begin/end blocks are balanced and every referenced name exists in the model, but reading the actual code inside each block surfaces <strong>3 of 36 blocks (8%)</strong> where the code does not match, or over-reaches, the feature it is tagged with. The paper's Demonstration section reports this stricter count directly.</p>
+
+<div class="statbar-block">
+  <div class="statbar-row">
+    <div class="statbar-label"><span>File-to-feature mappings</span><span class="statbar-total">20 total</span></div>
+    <div class="statbar-track">
+      <div class="statbar-seg ok" style="width:70%" tabindex="0" data-tip="14 correct — 70%"><span class="seg-label">14 correct</span></div>
+      <div class="statbar-seg bad" style="width:30%" tabindex="0" data-tip="6 stale — 30%"><span class="seg-label">6 stale</span></div>
+    </div>
+  </div>
+  <div class="statbar-row">
+    <div class="statbar-label"><span>Fragment begin/end blocks</span><span class="statbar-total">36 total</span></div>
+    <div class="statbar-track">
+      <div class="statbar-seg ok" style="width:91.7%" tabindex="0" data-tip="33 correct — 92%"><span class="seg-label">33 correct</span></div>
+      <div class="statbar-seg warn" style="width:8.3%" tabindex="0" data-tip="3 misplaced — 8%"></div>
+    </div>
+  </div>
+  <div class="statlegend">
+    <span><i class="sw ok"></i>Correct</span>
+    <span><i class="sw warn"></i>Misplaced / over-broad</span>
+    <span><i class="sw bad"></i>Stale / dangling</span>
+  </div>
+</div>
 
 <h2 id="files">File-level mappings (<code>.feature-to-file</code>) — 20 total</h2>
 <table>

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Commit History — Agent-HAnS Demonstration Dataset</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Newsreader:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #f7f4ec;
+    --paper-2: #e9dfc2;
+    --ink: #22201b;
+    --ink-soft: #5f5849;
+    --rule: #cbbc93;
+    --rust: #b5502a;
+    --rust-dark: #8a3324;
+    --forest: #33593a;
+    --gold: #8c6a1c;
+    --terminal: #211c15;
+    --terminal-fg: #efe6cf;
+    --terminal-fg-dim: #8f8672;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font-family: 'Newsreader', Georgia, serif; line-height: 1.65; font-size: 17px; }
+  a { color: var(--rust); }
+  code { font-family: 'JetBrains Mono', ui-monospace, monospace; background: var(--paper-2); padding: 0.05rem 0.35rem; border-radius: 2px; font-size: 0.82em; color: var(--rust-dark); }
+
+  .sitehead { background: var(--paper); border-bottom: 3px solid var(--ink); position: sticky; top: 0; z-index: 10; }
+  .sitehead-inner { max-width: 1150px; margin: 0 auto; padding: 0 2rem; display: flex; align-items: stretch; justify-content: space-between; flex-wrap: wrap; }
+  .brand { font-family: 'JetBrains Mono', monospace; font-weight: 700; text-decoration: none; color: var(--ink); font-size: 0.92rem; padding: 1.05rem 0; letter-spacing: -0.01em; }
+  .brand .hash { color: var(--rust); }
+  .tabs { display: flex; }
+  .tabs a { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; text-decoration: none; color: var(--ink-soft); padding: 1.2rem 1.1rem; border-left: 1px solid var(--rule); display: flex; align-items: center; }
+  .tabs a:last-child { border-right: 1px solid var(--rule); }
+  .tabs a:hover { color: var(--rust); background: var(--paper-2); }
+  .tabs a.active { color: var(--paper); background: var(--ink); }
+
+  .wrap { max-width: 1150px; margin: 0 auto; padding: 3rem 2rem 5rem; }
+  .masthead { border-bottom: 4px double var(--ink); padding-bottom: 1.6rem; margin-bottom: 2.4rem; }
+  .kicker { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; color: var(--rust); margin-bottom: 0.5rem; }
+  h1 { font-family: 'JetBrains Mono', monospace; font-weight: 800; font-size: 2rem; margin: 0 0 0.6rem; letter-spacing: -0.02em; text-transform: uppercase; }
+  .dek { font-style: italic; color: var(--ink-soft); font-size: 1.1rem; max-width: 68ch; margin: 0; }
+  h2 { font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; margin-top: 2.4rem; margin-bottom: 0; }
+
+  .evcard { display: grid; grid-template-columns: 5rem 1fr auto; gap: 1rem; align-items: start; padding: 1.1rem 0; border-bottom: 1px solid var(--rule); }
+  .evcard .evnum { font-family: 'JetBrains Mono', monospace; font-weight: 800; font-size: 1.5rem; color: var(--rust); line-height: 1; }
+  .evcard .evfeat { font-family: 'JetBrains Mono', monospace; font-size: 0.95rem; margin-bottom: 0.6rem; }
+  .evcard .evtype { font-family: 'JetBrains Mono', monospace; font-size: 0.66rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.15rem 0.5rem; border: 2px solid currentColor; white-space: nowrap; height: fit-content; justify-self: end; }
+  .evtype.add { color: var(--forest); }
+  .evtype.merge { color: var(--gold); }
+  .evtype.split { color: var(--gold); }
+  .evtype.remove { color: var(--rust-dark); }
+
+  .commits { list-style: none; margin: 0; padding: 0; font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; }
+  .commits li { padding: 0.35rem 0; display: flex; gap: 0.7rem; align-items: baseline; flex-wrap: wrap; }
+  .commits .sha { color: var(--rust); text-decoration: none; }
+  .commits .sha:hover { text-decoration: underline; }
+  .commits .msg { color: var(--ink); }
+  .commits .date { color: var(--terminal-fg-dim); font-size: 0.74rem; margin-left: auto; }
+
+  .packaging { background: var(--terminal); color: var(--terminal-fg); padding: 1.3rem 1.6rem; font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; margin-top: 1.2rem; }
+  .packaging li { padding: 0.3rem 0; display: flex; gap: 0.7rem; align-items: baseline; flex-wrap: wrap; list-style: none; }
+  .packaging a { color: #e8b876; text-decoration: none; }
+  .packaging a:hover { text-decoration: underline; }
+  .packaging .date { color: var(--terminal-fg-dim); font-size: 0.74rem; margin-left: auto; }
+  .packaging ul { margin: 0; padding: 0; }
+  .note { font-size: 0.9rem; color: var(--ink-soft); font-style: italic; margin: 0.6rem 0 0; }
+</style>
+</head>
+<body>
+<header class="sitehead">
+  <div class="sitehead-inner">
+    <a class="brand" href="index.html"><span class="hash">#</span> johmara/agentic-traceability-maintenance-dataset</a>
+    <nav class="tabs">
+      <a href="index.html">Home</a>
+      <a href="contents.html">Repository</a>
+      <a href="audit.html">Audit</a>
+      <a href="history.html" class="active">History</a>
+      <a href="https://github.com/johmara/agentic-traceability-maintenance-dataset" target="_blank" rel="noopener">GitHub ↗</a>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap">
+
+<div class="masthead">
+  <div class="kicker">$ git log --follow .feature-model</div>
+  <h1>Commit History</h1>
+  <p class="dek">Every commit that produced <code>ReferenceManager</code>, grouped by the evolution step it belongs to. Each evolution step in the paper corresponds to one structural feature-model change; the commits below are the prompts that got there.</p>
+</div>
+
+<h2>Evolution steps</h2>
+
+<div class="evcard">
+  <div class="evnum">01</div>
+  <div>
+    <div class="evfeat"><code>Database</code>, <code>ApiDocs</code>, <code>Papers</code></div>
+    <ul class="commits">
+      <li><a class="sha" href="https://github.com/johmara/agentic-traceability-maintenance-dataset/commit/ed213803cea5f8a8051f862e3583b00145585bc0" target="_blank" rel="noopener">ed21380</a><span class="msg">init</span><span class="date">2026-04-24</span></li>
+      <li><a class="sha" href="https://github.com/johmara/agentic-traceability-maintenance-dataset/commit/28438743e1fcde7785848552be787f7096394163" target="_blank" rel="noopener">2843874</a><span class="msg">feat: add EF Core + SQLite with Papers CRUD API</span><span class="date">2026-04-24</span></li>
+      <li><a class="sha" href="https://github.com/johmara/agentic-traceability-maintenance-dataset/commit/5a0a45e422617297f01918db17e4a7faddec6024" target="_blank" rel="noopener">5a0a45e</a><span class="msg">feat: Author model with multiple affiliations</span><span class="date">2026-04-24</span></li>
+      <li><a class="sha" href="https://github.com/johmara/agentic-traceability-maintenance-dataset/commit/a5d5312213dac1c4e97be63be8aef71a49affd67" target="_blank" rel="noopener">a5d5312</a><span class="msg">evolution point 1</span><span class="date">2026-04-24</span></li>
+    </ul>
+  </div>
+  <div class="evtype add">Add</div>
+</div>
+
+<div class="evcard">
+  <div class="evnum">02</div>
+  <div>
+    <div class="evfeat"><code>Collections</code>, <code>Versioning</code></div>
+    <ul class="commits">
+      <li><a class="sha" href="https://github.com/johmara/agentic-traceability-maintenance-dataset/commit/b45824a2d36847df215a26e4055299285552153f" target="_blank" rel="noopener">b45824a</a><span class="msg">feat: add Collections feature with many-to-many paper relationship</span><span class="date">2026-04-24</span></li>
+      <li><a class="sha" href="https://github.com/johmara/agentic-traceability-maintenance-dataset/commit/abefebbff0048732ad667979ef0003d383e87191" target="_blank" rel="noopener">abefebb</a><span class="msg">refactor: split monolithic Program.cs into endpoint classes</span><span class="date">2026-04-24</span></li>
+      <li><a class="sha" href="https://github.com/johmara/agentic-traceability-maintenance-dataset/commit/5b3f18c355412b07f5a9d1fd2382fe9f0b321347" target="_blank" rel="noopener">5b3f18c</a><span class="msg">seed: add accepted papers collection with all 7 published papers</span><span class="date">2026-04-24</span></li>
+      <li><a class="sha" href="https://github.com/johmara/agentic-traceability-maintenance-dataset/commit/23bfb57988885313b7db7463a4fcfffc69d22d45" target="_blank" rel="noopener">23bfb57</a><span class="msg">feat: add API versioning and pagination to list endpoints</span><span class="date">2026-04-24</span></li>
+    </ul>
+  </div>
+  <div class="evtype add">Add</div>
+</div>
+
+<div class="evcard">
+  <div class="evnum">03</div>
+  <div>
+    <div class="evfeat"><code>Tags</code></div>
+    <ul class="commits">
+      <li><a class="sha" href="https://github.com/johmara/agentic-traceability-maintenance-dataset/commit/e6688f462d74fc624977e0612378dbe7d4335669" target="_blank" rel="noopener">e6688f4</a><span class="msg">feat: add xunit integration tests and fix collection serialization</span><span class="date">2026-04-24</span></li>
+      <li><a class="sha" href="https://github.com/johmara/agentic-traceability-maintenance-dataset/commit/45e6fd1c8b49b56cb8bcefd2ddf125623ed77926" target="_blank" rel="noopener">45e6fd1</a><span class="msg">feat: add Tags feature with many-to-many paper relationship</span><span class="date">2026-04-27</span></li>
+    </ul>
+  </div>
+  <div class="evtype add">Add</div>
+</div>
+
+<div class="evcard">
+  <div class="evnum">04</div>
+  <div>
+    <div class="evfeat"><code>Favorites</code></div>
+    <ul class="commits">
+      <li><a class="sha" href="https://github.com/johmara/agentic-traceability-maintenance-dataset/commit/17b8b03aa2100b253ba3f3cf1e6bd8731ef11705" target="_blank" rel="noopener">17b8b03</a><span class="msg">feat: add Favorites feature with toggle and list endpoints</span><span class="date">2026-04-27</span></li>
+    </ul>
+  </div>
+  <div class="evtype add">Add</div>
+</div>
+
+<div class="evcard">
+  <div class="evnum">05</div>
+  <div>
+    <div class="evfeat"><code>Tags</code> + <code>Collections</code> → <code>Groups</code></div>
+    <ul class="commits">
+      <li><a class="sha" href="https://github.com/johmara/agentic-traceability-maintenance-dataset/commit/db3b9fad76295229c442e33f1c3dab7964a05080" target="_blank" rel="noopener">db3b9fa</a><span class="msg">feat: merge Tags and Collections into unified Groups model</span><span class="date">2026-04-27</span></li>
+    </ul>
+  </div>
+  <div class="evtype merge">Merge</div>
+</div>
+
+<div class="evcard">
+  <div class="evnum">06</div>
+  <div>
+    <div class="evfeat"><code>Papers.ImportBibTex</code></div>
+    <ul class="commits">
+      <li><a class="sha" href="https://github.com/johmara/agentic-traceability-maintenance-dataset/commit/d189e0ccabb3f3d15706926b265bd9a8fb4da71b" target="_blank" rel="noopener">d189e0c</a><span class="msg">feat: add BibTeX import endpoint with dedup and journal/booktitle fields</span><span class="date">2026-04-27</span></li>
+    </ul>
+  </div>
+  <div class="evtype add">Add</div>
+</div>
+
+<div class="evcard">
+  <div class="evnum">07</div>
+  <div>
+    <div class="evfeat"><code>Papers.ExportBibTex</code></div>
+    <ul class="commits">
+      <li><a class="sha" href="https://github.com/johmara/agentic-traceability-maintenance-dataset/commit/2857c5a7487fe67be29d7ea9e3bb4b540ca9cd49" target="_blank" rel="noopener">2857c5a</a><span class="msg">feat: add BibTeX export endpoint with journal/booktitle fields</span><span class="date">2026-04-27</span></li>
+    </ul>
+  </div>
+  <div class="evtype add">Add</div>
+</div>
+
+<div class="evcard">
+  <div class="evnum">08</div>
+  <div>
+    <div class="evfeat"><code>Papers.Authors</code> → <code>Authors</code></div>
+    <ul class="commits">
+      <li><a class="sha" href="https://github.com/johmara/agentic-traceability-maintenance-dataset/commit/975d7a4d28acd58f4b896fc2bff53169950036e3" target="_blank" rel="noopener">975d7a4</a><span class="msg">feat: add standalone Authors model with CRUD and merge endpoints</span><span class="date">2026-04-27</span></li>
+    </ul>
+    <p class="note">This is the commit our <a href="audit.html#missing">annotation audit</a> flags as completely untagged — the split itself carries no <code>&amp;begin[Authors]</code> anywhere.</p>
+  </div>
+  <div class="evtype split">Split</div>
+</div>
+
+<div class="evcard">
+  <div class="evnum">09</div>
+  <div>
+    <div class="evfeat"><code>Papers.SearchPapers</code></div>
+    <ul class="commits">
+      <li><a class="sha" href="https://github.com/johmara/agentic-traceability-maintenance-dataset/commit/f91dc2882889303ff7898ba7b8f191cdf81f0fd3" target="_blank" rel="noopener">f91dc28</a><span class="msg">feat: add SearchPapers endpoint and PaperResponse DTO with Groups included</span><span class="date">2026-04-27</span></li>
+    </ul>
+  </div>
+  <div class="evtype add">Add</div>
+</div>
+
+<div class="evcard">
+  <div class="evnum">10</div>
+  <div>
+    <div class="evfeat">− <code>Favorites</code></div>
+    <ul class="commits">
+      <li><a class="sha" href="https://github.com/johmara/agentic-traceability-maintenance-dataset/commit/ba1919f313e40064fdd298207243cd61532800f0" target="_blank" rel="noopener">ba1919f</a><span class="msg">final commit</span><span class="date">2026-04-27</span></li>
+    </ul>
+  </div>
+  <div class="evtype remove">Remove</div>
+</div>
+
+<h2>Dataset packaging</h2>
+<p class="note" style="margin-top:0.8rem;">Not part of any evolution step — these commits turned the working project into the published artifact after Evolution&nbsp;10 completed.</p>
+<div class="packaging">
+  <ul>
+    <li><a href="https://github.com/johmara/agentic-traceability-maintenance-dataset/commit/7ecb5f84dec3fea76ea4b0db90c0666997c56c14" target="_blank" rel="noopener">7ecb5f8</a> chore: ignore .claude, CLAUDE.md, .mcp.json <span class="date">2026-04-28</span></li>
+    <li><a href="https://github.com/johmara/agentic-traceability-maintenance-dataset/commit/69dba38a3d7730976e2c62d5605ed4293d534fb3" target="_blank" rel="noopener">69dba38</a> add redacted demonstration artefacts (evolution points, prompts, stats) <span class="date">2026-04-28</span></li>
+    <li><a href="https://github.com/johmara/agentic-traceability-maintenance-dataset/commit/27c4b74298e1c5e6e111c7230fad315f48b48511" target="_blank" rel="noopener">27c4b74</a> restructure into dataset/ layout (ReferenceManager/, demonstration/, README) <span class="date">2026-04-28</span></li>
+    <li><a href="https://github.com/johmara/agentic-traceability-maintenance-dataset/commit/ba483fd5099c21d7316803c003f1f2558a067598" target="_blank" rel="noopener">ba483fd</a> flatten dataset/ prefix, move files to repo root <span class="date">2026-04-28</span></li>
+    <li><a href="https://github.com/johmara/agentic-traceability-maintenance-dataset/commit/9568b1b95a35304f90097f599d25a500551c21e1" target="_blank" rel="noopener">9568b1b</a> add ReferenceManagerUI frontend demo and enable CORS on API <span class="date">2026-05-04</span></li>
+    <li><a href="https://github.com/johmara/agentic-traceability-maintenance-dataset/commit/3dc872b15f300f44153973389b512f3d267574d3" target="_blank" rel="noopener">3dc872b</a> docs: add ReferenceManagerUI run instructions to README <span class="date">2026-05-04</span></li>
+    <li><a href="https://github.com/johmara/agentic-traceability-maintenance-dataset/commit/af565bbfb17b3a6aa09aeddc25660712f8ebf9c0" target="_blank" rel="noopener">af565bb</a> add MIT license <span class="date">2026-05-11</span></li>
+    <li><a href="https://github.com/johmara/agentic-traceability-maintenance-dataset/commit/c7e41f33e506f200d8e19d3673b795ed0343ea1f" target="_blank" rel="noopener">c7e41f3</a> docs: remove tool name from README <span class="date">2026-05-11</span></li>
+    <li><a href="https://github.com/johmara/agentic-traceability-maintenance-dataset/commit/705dd73f75e94cf7e678ac5c997ad91e93b4b6fd" target="_blank" rel="noopener">705dd73</a> update with html audit file <span class="date">2026-07-29</span></li>
+    <li><a href="https://github.com/johmara/agentic-traceability-maintenance-dataset/commit/f826c7f6685267f483f3f93ac85fb87436374c19" target="_blank" rel="noopener">f826c7f</a> add GitHub Pages site: home, repository browser, audit report <span class="date">2026-07-29</span></li>
+  </ul>
+</div>
+
+</div>
+</body>
+</html>

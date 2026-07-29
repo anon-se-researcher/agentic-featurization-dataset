@@ -85,3 +85,7 @@ dotnet test
 ## Redaction note
 
 Personal and organizational identifiers have been redacted: the developer's name is replaced with *A. Developer*, the employing organization with *The Company*, and local file system paths are relative.
+
+## License
+
+Source code in `ReferenceManager/` and `ReferenceManagerUI/` is licensed under the [MIT License](LICENSE). Everything else, `demonstration/`, this README, `annotation-audit.html`, and the GitHub Pages site in `docs/`, is licensed under [CC BY 4.0](LICENSE-CONTENT).
