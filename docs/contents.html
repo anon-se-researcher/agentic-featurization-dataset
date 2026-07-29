@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Repository — Agent-HAnS Demonstration Dataset</title>
+<style>
+  :root {
+    --bg: #f6f7f9;
+    --panel: #ffffff;
+    --ink: #1c2128;
+    --muted: #5b6472;
+    --border: #dfe3e8;
+    --accent: #2f5d62;
+    --accent-soft: #e4eeee;
+  }
+  * { box-sizing: border-box; }
+  body { font-family: "Inter", -apple-system, Segoe UI, Roboto, sans-serif; margin: 0; background: var(--bg); color: var(--ink); line-height: 1.6; }
+  .wrap { max-width: 1150px; margin: 0 auto; padding: 2.2rem 2rem 4rem; }
+  h1 { font-size: 1.55rem; margin: 0 0 0.2rem; letter-spacing: -0.01em; }
+  h2 { font-size: 1rem; margin-top: 2.2rem; color: var(--accent); text-transform: uppercase; letter-spacing: 0.04em; border-bottom: 1px solid var(--border); padding-bottom: 0.4rem; }
+  .subtitle { color: var(--muted); margin-top: 0; font-size: 0.95rem; }
+  code { background: var(--accent-soft); padding: 0.05rem 0.35rem; border-radius: 4px; font-size: 0.88em; color: #1a3b3e; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  .tree { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 0.4rem 0; margin: 1rem 0 2rem; }
+  .row { display: flex; align-items: baseline; gap: 0.7rem; padding: 0.45rem 1.1rem; border-bottom: 1px solid var(--border); font-size: 0.88rem; }
+  .row:last-child { border-bottom: none; }
+  .row.dir { background: var(--accent-soft); font-weight: 600; }
+  .row .path { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; min-width: 260px; }
+  .row.depth1 .path { padding-left: 1.2rem; }
+  .row.depth2 .path { padding-left: 2.4rem; }
+  .row .desc { color: var(--muted); }
+  .badge-count { display: inline-block; background: var(--accent); color: white; border-radius: 10px; padding: 0.05rem 0.5rem; font-size: 0.72rem; font-weight: 700; margin-left: 0.4rem; }
+
+  .sitehead { background: var(--accent); position: sticky; top: 0; z-index: 10; box-shadow: 0 1px 4px rgba(0,0,0,0.12); }
+  .sitehead-inner { max-width: 1150px; margin: 0 auto; padding: 0.9rem 2rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.6rem; }
+  .sitehead .brand { color: white; font-weight: 700; text-decoration: none; font-size: 0.95rem; letter-spacing: -0.01em; }
+  .sitehead nav { display: flex; gap: 1.3rem; }
+  .sitehead nav a { color: #dcebe9; text-decoration: none; font-size: 0.85rem; font-weight: 600; }
+  .sitehead nav a:hover, .sitehead nav a.active { color: white; text-decoration: underline; }
+</style>
+</head>
+<body>
+<header class="sitehead">
+  <div class="sitehead-inner">
+    <a class="brand" href="index.html">Agent-HAnS Demonstration Dataset</a>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="contents.html" class="active">Repository</a>
+      <a href="audit.html">Audit Report</a>
+      <a href="https://github.com/johmara/agentic-traceability-maintenance-dataset" target="_blank" rel="noopener">GitHub&nbsp;↗</a>
+    </nav>
+  </div>
+</header>
+<div class="wrap">
+
+<h1>Repository Contents</h1>
+<p class="subtitle">Every row links to the actual file or folder on GitHub. This page is a guided map, not a mirror — the code itself lives in the repository.</p>
+
+<h2>ReferenceManager <span class="badge-count">API</span></h2>
+<div class="tree">
+  <div class="row dir"><span class="path"><a href="https://github.com/johmara/agentic-traceability-maintenance-dataset/tree/main/ReferenceManager" target="_blank" rel="noopener">ReferenceManager/</a></span><span class="desc">C#/.NET 9 web API, 41 source files, 25 features</span></div>
+  <div class="row depth1"><span class="path"><a href="https://github.com/johmara/agentic-traceability-maintenance-dataset/blob/main/ReferenceManager/Program.cs" target="_blank" rel="noopener">Program.cs</a></span><span class="desc">Application entry point — DI setup, CORS, DB migration on startup, endpoint registration</span></div>
+  <div class="row depth1"><span class="path"><a href="https://github.com/johmara/agentic-traceability-maintenance-dataset/tree/main/ReferenceManager/Data" target="_blank" rel="noopener">Data/</a></span><span class="desc"><code>AppDbContext.cs</code>, <code>DbSeeder.cs</code> — EF Core context and seed data</span></div>
+  <div class="row depth1"><span class="path"><a href="https://github.com/johmara/agentic-traceability-maintenance-dataset/tree/main/ReferenceManager/Endpoints" target="_blank" rel="noopener">Endpoints/</a></span><span class="desc">Minimal API route handlers — <code>PaperEndpoints.cs</code>, <code>AuthorEndpoints.cs</code>, <code>GroupEndpoints.cs</code></span></div>
+  <div class="row depth1"><span class="path"><a href="https://github.com/johmara/agentic-traceability-maintenance-dataset/tree/main/ReferenceManager/Models" target="_blank" rel="noopener">Models/</a></span><span class="desc"><code>Paper.cs</code>, <code>Author.cs</code>, <code>Affiliation.cs</code>, <code>Group.cs</code></span></div>
+  <div class="row depth1"><span class="path"><a href="https://github.com/johmara/agentic-traceability-maintenance-dataset/tree/main/ReferenceManager/Requests" target="_blank" rel="noopener">Requests/</a></span><span class="desc">Request DTOs per endpoint family</span></div>
+  <div class="row depth1"><span class="path"><a href="https://github.com/johmara/agentic-traceability-maintenance-dataset/tree/main/ReferenceManager/Responses" target="_blank" rel="noopener">Responses/</a></span><span class="desc">Response DTOs, including the generic <code>PagedResult.cs</code></span></div>
+  <div class="row depth1"><span class="path"><a href="https://github.com/johmara/agentic-traceability-maintenance-dataset/tree/main/ReferenceManager/Services" target="_blank" rel="noopener">Services/</a></span><span class="desc"><code>BibtexParser.cs</code>, <code>BibtexSerializer.cs</code> — BibTeX import/export</span></div>
+  <div class="row depth1"><span class="path"><a href="https://github.com/johmara/agentic-traceability-maintenance-dataset/tree/main/ReferenceManager/Migrations" target="_blank" rel="noopener">Migrations/</a></span><span class="desc">10 EF Core migrations spanning all 10 evolution steps</span></div>
+  <div class="row depth1"><span class="path"><a href="https://github.com/johmara/agentic-traceability-maintenance-dataset/tree/main/ReferenceManager/ReferenceManager.Tests" target="_blank" rel="noopener">ReferenceManager.Tests/</a></span><span class="desc">xUnit endpoint test suites for Papers, Authors, and Groups</span></div>
+  <div class="row depth1"><span class="path"><a href="https://github.com/johmara/agentic-traceability-maintenance-dataset/blob/main/ReferenceManager/.feature-model" target="_blank" rel="noopener">.feature-model</a></span><span class="desc">The final feature model tree — 25 features, 6 top-level</span></div>
+  <div class="row depth1"><span class="path">.feature-to-file <em>(×7)</em></span><span class="desc">Embedded feature annotation file-level mappings, one per annotated folder</span></div>
+  <div class="row depth1"><span class="path"><a href="https://github.com/johmara/agentic-traceability-maintenance-dataset/tree/main/ReferenceManager/.claude" target="_blank" rel="noopener">.claude/</a></span><span class="desc">Agent-HAnS workflow specification and agent skills used to drive the demonstration</span></div>
+</div>
+
+<h2>ReferenceManagerUI <span class="badge-count">Frontend</span></h2>
+<div class="tree">
+  <div class="row dir"><span class="path"><a href="https://github.com/johmara/agentic-traceability-maintenance-dataset/tree/main/ReferenceManagerUI" target="_blank" rel="noopener">ReferenceManagerUI/</a></span><span class="desc">Single-page browser frontend, no build step</span></div>
+  <div class="row depth1"><span class="path"><a href="https://github.com/johmara/agentic-traceability-maintenance-dataset/blob/main/ReferenceManagerUI/index.html" target="_blank" rel="noopener">index.html</a></span><span class="desc">Paper CRUD, search, BibTeX import/export, group and author management</span></div>
+</div>
+
+<h2>demonstration <span class="badge-count">Transcripts</span></h2>
+<div class="tree">
+  <div class="row dir"><span class="path"><a href="https://github.com/johmara/agentic-traceability-maintenance-dataset/tree/main/demonstration" target="_blank" rel="noopener">demonstration/</a></span><span class="desc">Verbatim Claude Code sessions for all 10 evolution steps</span></div>
+  <div class="row depth1"><span class="path">evolution-point1.txt … evolution-point10.txt</span><span class="desc">One transcript per evolution step — <a href="https://github.com/johmara/agentic-traceability-maintenance-dataset/tree/main/demonstration" target="_blank" rel="noopener">browse all&nbsp;↗</a></span></div>
+  <div class="row depth1"><span class="path"><a href="https://github.com/johmara/agentic-traceability-maintenance-dataset/blob/main/demonstration/prompts.md" target="_blank" rel="noopener">prompts.md</a></span><span class="desc">All 27 developer prompts across the 10 evolution steps</span></div>
+  <div class="row depth1"><span class="path"><a href="https://github.com/johmara/agentic-traceability-maintenance-dataset/blob/main/demonstration/result-stats.md" target="_blank" rel="noopener">result-stats.md</a></span><span class="desc">Final cloc statistics for the codebase</span></div>
+</div>
+
+<h2>Top level</h2>
+<div class="tree">
+  <div class="row"><span class="path"><a href="https://github.com/johmara/agentic-traceability-maintenance-dataset/blob/main/README.md" target="_blank" rel="noopener">README.md</a></span><span class="desc">Full documentation, also shown on the <a href="index.html">Home</a> page</span></div>
+  <div class="row"><span class="path"><a href="https://github.com/johmara/agentic-traceability-maintenance-dataset/blob/main/annotation-audit.html" target="_blank" rel="noopener">annotation-audit.html</a></span><span class="desc">Source of the <a href="audit.html">Audit Report</a> page</span></div>
+  <div class="row"><span class="path"><a href="https://github.com/johmara/agentic-traceability-maintenance-dataset/blob/main/LICENSE" target="_blank" rel="noopener">LICENSE</a></span><span class="desc">MIT</span></div>
+</div>
+
+</div>
+</body>
+</html>
