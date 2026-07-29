@@ -65,9 +65,13 @@
   pre.code { font-family: 'JetBrains Mono', ui-monospace, monospace; background: var(--terminal); color: var(--terminal-fg); padding: 0.9rem 1.1rem; overflow-x: auto; font-size: 0.8rem; margin: 0.4rem 0; }
   pre.code .tag { color: #e8b876; }
   .note { font-size: 0.9rem; color: var(--ink-soft); font-style: italic; margin-top: -0.3rem; }
-  .toc { display: flex; gap: 1.3rem; flex-wrap: wrap; font-family: 'JetBrains Mono', monospace; font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.04em; margin-top: 1rem; }
-  .toc a { color: var(--rust); text-decoration: none; font-weight: 700; }
-  .toc a:hover { text-decoration: underline; }
+  .toc-wrap { display: flex; align-items: baseline; gap: 0.9rem; flex-wrap: wrap; margin-top: 1.4rem; padding-top: 1.2rem; border-top: 1px dashed var(--rule); }
+  .toc-label { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-soft); white-space: nowrap; }
+  .toc { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+  .toc a { display: inline-flex; align-items: center; gap: 0.3rem; font-family: 'JetBrains Mono', monospace; font-size: 0.74rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; color: var(--ink); text-decoration: none; background: var(--paper-2); border: 1px solid var(--rule); border-radius: 20px; padding: 0.3rem 0.7rem; }
+  .toc a::before { content: "↓"; color: var(--rust); font-weight: 700; }
+  .toc a:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .toc a:hover::before { color: var(--gold); }
   .callout { background: var(--paper-2); border: 1px solid var(--warn-bd); border-left: 4px solid var(--warn-fg); padding: 1rem 1.3rem; margin: 1.2rem 0; }
   .callout.info { border-left-color: var(--ink-soft); border-color: var(--rule); }
 
@@ -115,7 +119,7 @@
 <div class="wrap">
 
 <div class="masthead">
-  <div class="kicker">$ audit --verify ReferenceManager/</div>
+  <div class="kicker">Manual Audit</div>
   <h1>Agent-HAnS Annotation Audit</h1>
   <p class="subtitle">Agent-HAnS writes annotations automatically as an AI coding agent builds an app. This page is a manual, line-by-line check of every annotation it wrote in <code>ReferenceManager</code>, to see how well the automation actually held up.</p>
 </div>
@@ -124,14 +128,17 @@
 <p>Agent-HAnS uses three kinds of markers, called <strong>embedded feature annotations</strong>, to record which feature a piece of code belongs to. A <em>folder mapping</em> tags a whole folder. A <em>file mapping</em> tags a whole file, listed in a small companion file named <code>.feature-to-file</code>. A <em>fragment mapping</em> tags a specific block or line of code with a comment such as <code>&amp;begin[Groups]</code> ... <code>&amp;end[Groups]</code>, or <code>&amp;line[Groups]</code> for a single line. All of them point at an entry in <code>.feature-model</code>, the tree of every feature in the app.</p>
 <p>For every annotation we checked two things. First, <strong>does the feature it points at still exist?</strong> A merge or a split can remove a feature, leaving old annotations pointing at nothing, we call that <span class="badge bad">stale</span>. Second, assuming the feature does exist, <strong>does the annotated code actually implement it?</strong> If the code doesn't match, or the annotation covers more than it should, we call that <span class="badge warn">misplaced</span>. Everything else is <span class="badge ok">correct</span>. A begin/end block is also either <strong>balanced</strong>, meaning its <code>&amp;begin</code> has a matching <code>&amp;end</code>, or not.</p>
 
-<div class="toc">
-  <a href="#model">Feature model</a>
-  <a href="#summary">Summary</a>
-  <a href="#files">File mappings (20)</a>
-  <a href="#placement">Fragment placement findings</a>
-  <a href="#fragments">Full fragment list (50)</a>
-  <a href="#coverage">Feature coverage</a>
-  <a href="#missing">Missing annotations</a>
+<div class="toc-wrap">
+  <span class="toc-label">Jump to:</span>
+  <div class="toc">
+    <a href="#model">Feature model</a>
+    <a href="#summary">Summary</a>
+    <a href="#files">File mappings (20)</a>
+    <a href="#placement">Fragment placement findings</a>
+    <a href="#fragments">Full fragment list (50)</a>
+    <a href="#coverage">Feature coverage</a>
+    <a href="#missing">Missing annotations</a>
+  </div>
 </div>
 
 <h2 id="model">Final feature model (<code>.feature-model</code>)</h2>
