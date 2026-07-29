@@ -35,11 +35,6 @@
   h2 { font-family: 'JetBrains Mono', monospace; font-size: 0.88rem; margin-top: 2.6rem; color: var(--rust); text-transform: uppercase; letter-spacing: 0.06em; border-top: 1px solid var(--rule); padding-top: 1.4rem; }
   h3 { font-family: 'JetBrains Mono', monospace; font-size: 0.95rem; margin-top: 1.6rem; }
   .subtitle { color: var(--ink-soft); margin-top: 0; font-size: 1.05rem; font-style: italic; max-width: 72ch; }
-  .legend { display: flex; gap: 1.4rem; flex-wrap: wrap; margin: 1.2rem 0 0; font-size: 0.82rem; color: var(--ink-soft); font-family: 'JetBrains Mono', monospace; }
-  .legend span.dot { display: inline-block; width: 0.6rem; height: 0.6rem; margin-right: 0.4rem; vertical-align: middle; transform: rotate(45deg); }
-  .dot.ok { background: var(--ok-fg); }
-  .dot.warn { background: var(--warn-fg); }
-  .dot.bad { background: var(--bad-fg); }
 
   .summary { display: flex; gap: 0.9rem; flex-wrap: wrap; margin: 1.5rem 0; }
   .stat { background: var(--paper-2); border: 1px solid var(--rule); padding: 0.9rem 1.2rem; flex: 1; min-width: 150px; }
@@ -102,11 +97,6 @@
     background: var(--terminal); color: var(--terminal-fg); font-size: 0.7rem; font-weight: 700;
     padding: 0.3rem 0.6rem; border-radius: 3px; white-space: nowrap; z-index: 5; pointer-events: none;
   }
-  .statlegend { display: flex; gap: 1.4rem; flex-wrap: wrap; font-family: 'JetBrains Mono', monospace; font-size: 0.76rem; color: var(--ink-soft); margin-top: 0.8rem; }
-  .statlegend .sw { display: inline-block; width: 10px; height: 10px; margin-right: 0.4rem; vertical-align: middle; }
-  .sw.ok { background: var(--forest); }
-  .sw.warn { background: var(--gold); }
-  .sw.bad { background: var(--rust-dark); }
 </style>
 </head>
 <body>
@@ -127,14 +117,12 @@
 <div class="masthead">
   <div class="kicker">$ audit --verify ReferenceManager/</div>
   <h1>Agent-HAnS Annotation Audit</h1>
-  <p class="subtitle">Manual audit of <code>ReferenceManager</code> — final state after 27 prompts / 10 evolution steps. Verifies both <strong>resolution</strong> (does the referenced feature exist?) and <strong>placement</strong> (does the annotated code actually implement that feature?).</p>
+  <p class="subtitle">Agent-HAnS writes annotations automatically as an AI coding agent builds an app. This page is a manual, line-by-line check of every annotation it wrote in <code>ReferenceManager</code>, to see how well the automation actually held up.</p>
 </div>
 
-<div class="legend">
-  <span><span class="dot ok"></span>correct — feature exists and code matches</span>
-  <span><span class="dot warn"></span>misplaced — feature exists, but annotated code doesn't match it (or scope is too broad)</span>
-  <span><span class="dot bad"></span>stale — feature no longer exists in the model (dangling reference)</span>
-</div>
+<h2 id="howto">How to read this page</h2>
+<p>Agent-HAnS uses three kinds of markers, called <strong>embedded feature annotations</strong>, to record which feature a piece of code belongs to. A <em>folder mapping</em> tags a whole folder. A <em>file mapping</em> tags a whole file, listed in a small companion file named <code>.feature-to-file</code>. A <em>fragment mapping</em> tags a specific block or line of code with a comment such as <code>&amp;begin[Groups]</code> ... <code>&amp;end[Groups]</code>, or <code>&amp;line[Groups]</code> for a single line. All of them point at an entry in <code>.feature-model</code>, the tree of every feature in the app.</p>
+<p>For every annotation we checked two things. First, <strong>does the feature it points at still exist?</strong> A merge or a split can remove a feature, leaving old annotations pointing at nothing, we call that <span class="badge bad">stale</span>. Second, assuming the feature does exist, <strong>does the annotated code actually implement it?</strong> If the code doesn't match, or the annotation covers more than it should, we call that <span class="badge warn">misplaced</span>. Everything else is <span class="badge ok">correct</span>. A begin/end block is also either <strong>balanced</strong>, meaning its <code>&amp;begin</code> has a matching <code>&amp;end</code>, or not.</p>
 
 <div class="toc">
   <a href="#model">Feature model</a>
@@ -184,7 +172,7 @@
   <div class="stat warn"><span class="num">3 / 36</span><span class="label">blocks misplaced or over-broad</span></div>
   <div class="stat ok"><span class="num">25 / 25</span><span class="label">features covered by fragments</span></div>
 </div>
-<p>Structural validity (balanced blocks, names resolving to real features) is not the same as placement correctness. All 36 begin/end blocks are balanced and every referenced name exists in the model, but reading the actual code inside each block surfaces <strong>3 of 36 blocks (8%)</strong> where the code does not match, or over-reaches, the feature it is tagged with. The paper's Demonstration section reports this stricter count directly.</p>
+<p>Being balanced and pointing at a real feature name is a low bar, every begin/end block clears it, and every referenced feature name exists. But reading the actual code inside each block tells a stricter story: <strong>3 of the 36 blocks (8%)</strong> are tagged with a feature their code doesn't actually implement. The two charts below show both counts side by side, the two mapping mechanisms Agent-HAnS uses (whole-file mappings and in-code fragment markers) land at different accuracy.</p>
 
 <div class="statbar-block">
   <div class="statbar-row">
@@ -200,11 +188,6 @@
       <div class="statbar-seg ok" style="width:91.7%" tabindex="0" data-tip="33 correct — 92%"><span class="seg-label">33 correct</span></div>
       <div class="statbar-seg warn" style="width:8.3%" tabindex="0" data-tip="3 misplaced — 8%"></div>
     </div>
-  </div>
-  <div class="statlegend">
-    <span><i class="sw ok"></i>Correct</span>
-    <span><i class="sw warn"></i>Misplaced / over-broad</span>
-    <span><i class="sw bad"></i>Stale / dangling</span>
   </div>
 </div>
 
@@ -235,8 +218,8 @@
 </tbody>
 </table>
 
-<h2 id="placement">Fragment placement findings — read against actual code</h2>
-<p>Checking that the feature name in each <code>&amp;begin[F]</code>/<code>&amp;line[F]</code> resolves to a real feature is necessary but not sufficient. The following three blocks resolve to real features yet are misplaced or over-broad when read against the code they wrap.</p>
+<h2 id="placement">Do the annotations point at the right code?</h2>
+<p>Checking that <code>&amp;begin[Groups]</code> names a feature that exists is a name lookup, it does not tell you whether the code between <code>&amp;begin[Groups]</code> and <code>&amp;end[Groups]</code> actually implements <code>Groups</code>. To check that, we read every one of the 36 blocks by hand against the code it wraps. Three resolve to a real feature yet are misplaced, meaning the code inside doesn't match, or over-broad, meaning the block covers more than the one feature it names.</p>
 
 <div class="callout">
 <h3>1. <code>Data/DbSeeder.cs:118–159</code> tagged <code>Groups</code>, but the code creates <code>Paper</code> objects</h3>
@@ -343,8 +326,8 @@ app.MapGet("/papers/{id:int}", ...) // get one paper — named "GetPaper"
 <p>All 25 features in the model are referenced by at least one fragment annotation: <code>Database</code>, <code>ApiDocs</code>, <code>Versioning</code>, <code>Papers</code>, <code>CreatePaper</code>, <code>GetPaper</code>, <code>UpdatePaper</code>, <code>DeletePaper</code>, <code>ImportBibtex</code>, <code>ExportBibtex</code>, <code>SearchPapers</code>, <code>Authors</code>, <code>CreateAuthor</code>, <code>GetAuthor</code>, <code>ListAuthors</code>, <code>UpdateAuthor</code>, <code>DeleteAuthor</code>, <code>MergeAuthors</code>, <code>Groups</code>, <code>CreateGroup</code>, <code>GetGroup</code>, <code>UpdateGroup</code>, <code>DeleteGroup</code>, <code>AddPaperToGroup</code>, <code>RemovePaperFromGroup</code>. 25/25 — full coverage, independent of the placement findings above (coverage counts a feature as "referenced" even where the reference is over-broad, e.g. <code>GetGroup</code> / <code>GetPaper</code>).</p>
 <p class="note">Coverage-by-feature is not the same question as coverage-by-file. A feature can be "covered" by one annotated file while a second file that also implements it carries nothing. The section below checks the latter.</p>
 
-<h2 id="missing">Missing annotations — files that implement a feature but carry none</h2>
-<p>Everything above audits annotations that exist. This section checks the opposite direction: does every file that implements a feature carry <em>some</em> annotation, fragment or file-level? Of the 41 <code>.cs</code> files in <code>ReferenceManager</code>, 23 carry at least one annotation and 18 carry none. Most of the 18 are legitimately infrastructural (EF-generated <code>*.Designer.cs</code> siblings of already-tagged migrations, the auto-generated <code>AppDbContextModelSnapshot.cs</code>, the test-harness <code>CustomWebApplicationFactory.cs</code>, the three endpoint test suites, discussed separately below, and the generic cross-feature <code>Responses/PagedResult.cs</code>) and are reasonable to leave untagged. Two are not.</p>
+<h2 id="missing">Files that should have an annotation but don't</h2>
+<p>So far, every check has started from an annotation that exists and asked whether it's correct. This section asks the reverse question: are there files that clearly implement a feature, yet carry no annotation at all? Of the 41 <code>.cs</code> files in <code>ReferenceManager</code>, 23 carry at least one annotation and 18 carry none. Most of the 18 are legitimately infrastructural, files a human wouldn't annotate either, such as EF-generated <code>*.Designer.cs</code> siblings of already-tagged migrations, the auto-generated <code>AppDbContextModelSnapshot.cs</code>, the test-harness <code>CustomWebApplicationFactory.cs</code>, the three endpoint test suites (discussed separately below), and the generic cross-feature <code>Responses/PagedResult.cs</code>. Two are not, and those two are real gaps.</p>
 <p class="note">Test files are excluded from this check by design. Embedded feature annotations track where a feature is <em>implemented</em>, and tests verify a feature rather than implement it, so an unannotated test suite is not a recall failure. The interesting fact about the test suites turns out to run the other way, see below.</p>
 
 <div class="summary">

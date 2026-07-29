@@ -113,25 +113,31 @@
 
 <div class="masthead">
   <div class="kicker">Companion Artifact — ASE 2026</div>
-  <h1>ReferenceManager Dataset</h1>
-  <p class="dek">Agent-HAnS: Maintaining Feature and Code Traceability in Agentic Development. A C#/.NET&nbsp;9 web API developed entirely through agentic coding, its feature model and embedded annotations maintained automatically at every step.</p>
+  <h1>Agent-HAnS Demonstration Dataset</h1>
+  <p class="dek">Agent-HAnS is a tool that lets an AI coding agent automatically keep track of a codebase's features as it builds it. This dataset is the result of running it end to end: the full development history of ReferenceManager, a demo web API built entirely by the agent, feature model and annotations included.</p>
+  <p style="font-size:0.85rem; color:var(--ink-soft); margin-top:0.8rem;">Companion artifact for the ASE&nbsp;2026 paper <em>Agent-HAnS: Maintaining Feature and Code Traceability in Agentic Development</em>.</p>
 </div>
 
 <div class="layout">
   <div class="main">
 
-    <h2>ReferenceManager</h2>
-    <p>A web API for managing research paper references, built with .NET&nbsp;9, Entity Framework Core, and SQLite. Developed entirely through agentic coding using Claude Code.</p>
+    <h2>About Agent-HAnS</h2>
+    <p><strong>Agent-HAnS</strong> is a tool, presented in an ASE&nbsp;2026 paper, that lets an AI coding agent keep track of a codebase's features as it builds it, automatically. A <strong>feature</strong> here just means a piece of functionality a user cares about, such as &ldquo;search papers&rdquo; or &ldquo;import BibTeX.&rdquo; As the agent adds, changes, or removes functionality, Agent-HAnS instructs it to update a <strong>feature model</strong>, a simple tree of everything the app can do, and to leave small markers directly in the code, called <strong>embedded feature annotations</strong>, recording exactly which feature each file, folder, or block of code belongs to. Normally a developer has to do this by hand, and it goes stale as the code changes. Agent-HAnS makes the agent do it as a normal part of writing code, with no extra effort from the developer.</p>
+    <p>Under the hood, Agent-HAnS plugs into the coding agent through the Model Context Protocol and adds a project instruction file, two agent skills for updating the model and writing annotations, and a small server. That server also drives a live dashboard, so after every prompt a developer can see exactly what changed at the feature level, not just which files changed, before deciding what to ask for next. Since an agent can't be trusted to get the model or the annotations right every time, that dashboard is the human-in-the-loop check on the automation, and this audit page is us doing that check by hand after the fact. Agent-HAnS itself is open source: <a href="https://github.com/isselab/Agent-HAnS" target="_blank" rel="noopener">github.com/isselab/Agent-HAnS</a>.</p>
+
+    <h2>About this artifact</h2>
+    <p>This repository is the companion artifact for the Agent-HAnS paper. It contains <strong>ReferenceManager</strong>, a demo web API built entirely by an AI coding agent running Agent-HAnS; the full transcript of every prompt and agent response that built it; and a manual audit of how accurate the automatically generated feature model and annotations turned out to be. The app was built through 10 <strong>evolution steps</strong>, each one a single structural change to its feature set (for example, merging two features into one), driven by 1&ndash;6 natural-language prompts to Claude Code. Every feature and every annotation described below was produced by the agent, not by a human.</p>
+
+    <h2>The demo app</h2>
+    <p><strong>ReferenceManager</strong> is a web API for managing research paper references, built with .NET&nbsp;9, Entity Framework Core, and SQLite, plus a single-file browser frontend (<code>ReferenceManagerUI/index.html</code>) for interacting with it. Between the two, it supports full CRUD for papers, authors, and groups; full-text search over papers; and BibTeX import/export. Both pieces were built entirely through agentic coding using Claude Code, no line was hand-written.</p>
     <h3>Build and run</h3>
     <pre>cd ReferenceManager
 dotnet run
 <span style="color:#8f8672"># API + Scalar UI at http://localhost:5062/scalar/v1</span></pre>
+    <p>Then open <code>ReferenceManagerUI/index.html</code> directly in a browser, no build step or Node.js required, to use the app.</p>
 
-    <h2>ReferenceManagerUI</h2>
-    <p>A single-file browser frontend (<code>ReferenceManagerUI/index.html</code>) for interacting with the API, no build step or Node.js required. Covers paper CRUD, full-text search, BibTeX import/export, group management, and author management.</p>
-
-    <h2>Demonstration transcripts</h2>
-    <p><code>demonstration/</code> holds one verbatim Claude Code session per evolution step, showing the developer prompt, the agent's tool calls, and the automatic feature model update after each cycle.</p>
+    <h2>Development history</h2>
+    <p><code>demonstration/</code> holds one verbatim Claude Code session per evolution step, showing the developer prompt, the agent's tool calls, and the automatic feature model update after each cycle. The table below lists all 10 steps: what changed in the feature model, whether it was an addition, a merge, a split, or a removal, the commit each step starts at, and how much code it touched.</p>
     <div class="divlegend"><span><i class="sw neg"></i>Lines removed</span><span><i class="sw pos"></i>Lines added</span></div>
     <table class="evtable">
       <thead><tr><th>Ev.</th><th>Feature model change</th><th>Type</th><th>Starts at</th><th>Change size</th></tr></thead>
@@ -151,9 +157,9 @@ dotnet run
     <p><code>demonstration/prompts.md</code> lists all 27 developer prompts. <code>demonstration/result-stats.md</code> reports final cloc statistics. Full history, mapped commit-by-commit to each step, is on the <a href="history.html">History</a> page.</p>
 
     <h2>Annotation audit</h2>
-    <p>The <a href="audit.html">audit report</a> checks every <code>.feature-to-file</code> mapping and embedded fragment annotation against the feature model and the code it annotates, distinguishing stale mappings, misplaced or over-broad annotations, and files that implement a feature but carry none.</p>
+    <p>Agent-HAnS writes annotations automatically, but it can get them wrong, for example by leaving a marker pointing at a feature that was later removed. We manually went through every single annotation the agent produced in the final codebase and checked whether it is actually correct. The <a href="audit.html">full audit report</a> shows exactly what we checked and what we found.</p>
 
-    <div class="callout"><strong>Redaction note.</strong> Personal and organizational identifiers are redacted: the developer's name reads <em>A. Developer</em>, the employer <em>The Company</em>, and file system paths are relative.</div>
+    <div class="callout"><strong>Redaction note.</strong> To protect privacy, we replaced identifying details before publishing this dataset. Wherever the developer who ran the sessions is named, the transcripts instead read &ldquo;A. Developer,&rdquo; their employer reads &ldquo;The Company,&rdquo; and any local file system paths have been shortened to relative paths.</div>
 
     <h2>License</h2>
     <p>Source code in <code>ReferenceManager/</code> and <code>ReferenceManagerUI/</code> is licensed under the <a href="https://github.com/johmara/agentic-traceability-maintenance-dataset/blob/main/LICENSE" target="_blank" rel="noopener">MIT License</a>. Everything else, <code>demonstration/</code>, this README, <code>annotation-audit.html</code>, and this site, is licensed under <a href="https://github.com/johmara/agentic-traceability-maintenance-dataset/blob/main/LICENSE-CONTENT" target="_blank" rel="noopener">CC BY 4.0</a>.</p>
