@@ -60,14 +60,13 @@
   .margin .note .l { color: var(--ink-soft); }
   .margin .note .l::before { content: "// "; color: var(--rust); }
 
-  .ledger { border-top: 2px solid var(--ink); margin: 1.2rem 0 2.5rem; }
-  .ledger a { display: grid; grid-template-columns: 2.4rem 1fr auto; align-items: baseline; gap: 1rem; padding: 1rem 0.2rem; text-decoration: none; color: var(--ink); border-bottom: 1px solid var(--rule); }
-  .ledger a:hover { background: var(--paper-2); }
-  .ledger a:hover .go { color: var(--rust); }
-  .ledger .num { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--rust); font-size: 1.1rem; }
-  .ledger .txt strong { display: block; font-family: 'JetBrains Mono', monospace; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.02em; }
-  .ledger .txt span { color: var(--ink-soft); font-size: 0.88rem; font-style: italic; }
-  .ledger .go { font-family: 'JetBrains Mono', monospace; color: var(--rule); font-size: 1.1rem; }
+  .sitefoot { border-top: 4px double var(--ink); margin-top: 3rem; padding: 2.4rem 0 3rem; background: var(--paper-2); }
+  .sitefoot-inner { max-width: 1150px; margin: 0 auto; padding: 0 2rem; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; }
+  .sitefoot a { text-decoration: none; color: var(--ink); display: block; }
+  .sitefoot .fnum { font-family: 'JetBrains Mono', monospace; color: var(--rust); font-weight: 800; font-size: 0.85rem; display: block; margin-bottom: 0.4rem; }
+  .sitefoot strong { font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.03em; font-size: 0.85rem; display: block; margin-bottom: 0.4rem; }
+  .sitefoot a:hover strong { color: var(--rust); }
+  .sitefoot span { color: var(--ink-soft); font-size: 0.82rem; font-style: italic; line-height: 1.5; }
 
   .callout { background: var(--paper-2); border-left: 4px solid var(--gold); padding: 1rem 1.3rem; font-size: 0.9rem; margin: 1.5rem 0; }
 
@@ -173,5 +172,15 @@ dotnet run
 </div>
 
 </div>
+
+<footer class="sitefoot">
+  <div class="sitefoot-inner">
+    <a href="contents.html"><span class="fnum">01</span><strong>Repository</strong><span>The API, the frontend, and the demonstration transcripts, mapped and linked to source on GitHub.</span></a>
+    <a href="audit.html"><span class="fnum">02</span><strong>Audit Report</strong><span>Every file mapping and fragment annotation checked for correctness, placement, and coverage.</span></a>
+    <a href="history.html"><span class="fnum">03</span><strong>History</strong><span>Every commit that built ReferenceManager, mapped to the evolution step it belongs to.</span></a>
+    <a href="https://github.com/johmara/agentic-traceability-maintenance-dataset" target="_blank" rel="noopener"><span class="fnum">04</span><strong>GitHub ↗</strong><span>Clone the repository and run the API and frontend locally.</span></a>
+  </div>
+</footer>
+
 </body>
 </html>
